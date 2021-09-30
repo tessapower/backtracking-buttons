@@ -51,13 +51,10 @@ bool find_path(int current, int destination) {
     
     bool visited = cave[current].get_mark();
     if (visited) {
-
-        std::cout << "visited" << std::endl;
         return false; // do not visit a visited cave
     }
     
     cave[current].set_visited(true); // mark as visited
-    std::cout << current << " -> ";     // DEBUG cout
     
     int num = cave[current].get_num_doors();
     for (int i = 0; i < num; i++) {
@@ -68,9 +65,9 @@ bool find_path(int current, int destination) {
         }
     }
 
-    std::cout << "backtrack" << std::endl;
     return false;
 }
+
 void load_all_data() {
     // load the data for all caves - change as needed
     // this data is for the example in the notes
