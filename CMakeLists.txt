@@ -10,6 +10,7 @@ set(SOURCES
         src/statics.cpp
         src/pixel_class.cpp
         src/file_io.cpp
+        src/Bounds.cpp
         )
 set(HEADERS
         include/button_utils.h
@@ -17,6 +18,7 @@ set(HEADERS
         include/statics.h
         include/pixel_class.h
         include/file_io.h
+        include/Bounds.h
         )
 
 add_executable(main ${SOURCES} ${HEADERS} bin/main.cpp)
