@@ -1,7 +1,7 @@
 #ifndef BOUNDS_H
 #define BOUNDS_H
 
-#include "Coord.h"
+#include "coord.h"
 
 class Bounds {
 public:

@@ -1,12 +1,12 @@
-#ifndef BUTTON_UTILS_H
-#define BUTTON_UTILS_H
+#ifndef ALGORITHMS_H
+#define ALGORITHMS_H
 
 #include <optional>
 #include <string>
 
-#include "Coord.h"
+#include "coord.h"
 #include "pixel_class.h"
-#include "Bounds.h"
+#include "bounds.h"
 
 void process_image();
 
@@ -18,4 +18,4 @@ std::vector<Bounds> find_buttons();
 
 pixel_class* get_pixel(Coord const& c);
 
-#endif //BUTTON_UTILS_H
+#endif //ALGORITHMS_H

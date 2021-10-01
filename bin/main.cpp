@@ -1,9 +1,9 @@
 #include <cstdlib>
 
-#include "button_utils.h"
-#include "file_io.h"
+#include "algorithms.h"
+#include "io.h"
 
-#define OUTPUT_FILE "../tests/Buttons_processed.ppm"
+#define OUTPUT_FILE "Buttons_processed.ppm"
 
 int main() {
     loadButtons();

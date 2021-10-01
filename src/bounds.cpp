@@ -1,4 +1,4 @@
-#include "Bounds.h"
+#include "bounds.h"
 
 Bounds::Bounds()
     : min_x{0}, max_x{0}, min_y{0}, max_y{0} {}

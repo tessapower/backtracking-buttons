@@ -5,20 +5,20 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(include)
 set(SOURCES
-        src/button_utils.cpp
-        src/Coord.cpp
+        src/algorithms.cpp
+        src/coord.cpp
         src/statics.cpp
         src/pixel_class.cpp
-        src/file_io.cpp
-        src/Bounds.cpp
+        src/io.cpp
+        src/bounds.cpp
         )
 set(HEADERS
-        include/button_utils.h
-        include/Coord.h
+        include/algorithms.h
+        include/coord.h
         include/statics.h
         include/pixel_class.h
-        include/file_io.h
-        include/Bounds.h
+        include/io.h
+        include/bounds.h
         )
 
 add_executable(main ${SOURCES} ${HEADERS} bin/main.cpp)
