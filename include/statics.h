@@ -3,7 +3,6 @@
 
 #include "pixel_class.h"
 
-extern int total, xmin, xmax, ymin, ymax;  // MUST be global if used
 extern int screenx, screeny, maxcolours;   // you must use these
 extern pixel_class picture[600][600];      // you must use this
 

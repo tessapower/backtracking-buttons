@@ -6,6 +6,9 @@
 // 2D cartesian coordinate
 class Coord {
 public:
+    int x;
+    int y;
+
     Coord();
     Coord(int x, int y);
 
@@ -13,9 +16,7 @@ public:
      * @return Vector containing the neighboring top, right, bottom, and left
      *   coordinates in that order.
      */
-    std::vector<Coord> neighbors() const;
-    int x;
-    int y;
+    [[nodiscard]] std::vector<Coord> neighbors() const;
 };
 
 #endif //COORD_H

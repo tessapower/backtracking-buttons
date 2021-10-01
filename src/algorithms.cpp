@@ -12,7 +12,7 @@ std::optional<Coord> next_coord(Coord current) {
     }
 
     return (next->y >= screeny) ? std::nullopt : next;
-};
+}
 
 // Iterates over image to find and color buttons
 void process_image() {
