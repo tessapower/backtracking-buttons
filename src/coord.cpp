@@ -1,9 +1,10 @@
+#include <array>
 #include "coord.h"
 
 Coord::Coord(): x{0}, y{0} {}
 Coord::Coord(int X, int Y): x{X}, y{Y} {}
 
-std::vector<Coord> Coord::neighbors() const {
+std::array<Coord, 4> Coord::neighbors() const {
     // We base the neighboring coordinates on the graphics Cartesian Coordinate
     // system, with the origin starting in the top left.
     // x increases horizontally to the right, y increases vertically down.
@@ -16,5 +17,5 @@ std::vector<Coord> Coord::neighbors() const {
     Coord left{x - 1, y};
     Coord right{x + 1, y};
 
-    return std::vector<Coord> {top, right, bottom, left};
+    return std::array<Coord, 4>{top, right, bottom, left};
 }
