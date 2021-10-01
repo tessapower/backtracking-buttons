@@ -12,7 +12,9 @@ void process_image();
 
 bool is_button_color(pixel_class const& p);
 
-void fill_button(Coord coord);
+void discover_bounds(Coord const& coord, Bounds& discovered);
+
+std::vector<Bounds> find_buttons();
 
 pixel_class* get_pixel(Coord const& c);
 
