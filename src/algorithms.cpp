@@ -23,7 +23,9 @@ void process_image() {
     // check if buttons are broken
 
     for (auto const& b : buttons) {
-        draw_bounding_box(b, kColorGreen);
+        draw_points(b.points_on_bounds(), kColorGreen);
+        const Circle c{b.center(), static_cast<int>((b.width()/2.0)*0.93)};
+        draw_points(c.points_on_circumference(), kColorRed);
     }
 }
 
