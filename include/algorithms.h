@@ -4,10 +4,10 @@
 #include <optional>
 #include <string>
 
+#include "bounds.h"
 #include "color.h"
 #include "coord.h"
 #include "pixel_class.h"
-#include "bounds.h"
 
 void process_image();
 
