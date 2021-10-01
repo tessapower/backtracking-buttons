@@ -3,7 +3,7 @@
 Coord::Coord(): x{0}, y{0} {}
 Coord::Coord(int X, int Y): x{X}, y{Y} {}
 
-std::vector<Coord> Coord::neighbors() {
+std::vector<Coord> Coord::neighbors() const {
     // We base the neighboring coordinates on the graphics Cartesian Coordinate
     // system, with the origin starting in the top left.
     // x increases horizontally to the right, y increases vertically down.

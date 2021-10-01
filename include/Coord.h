@@ -13,7 +13,7 @@ public:
      * @return Vector containing the neighboring top, right, bottom, and left
      *   coordinates in that order.
      */
-    std::vector<Coord> neighbors();
+    std::vector<Coord> neighbors() const;
     int x;
     int y;
 };
