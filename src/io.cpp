@@ -8,7 +8,7 @@ void loadButtons() {
     int x, y, R, G, B;
     std::fstream infile;
     std::string infilename, line;
-    infilename = "../tests/Buttons.ppm";
+    infilename = "../tests/Buttons3.ppm";
     infile.open(infilename.c_str(), std::fstream::in);
     if (infile.is_open() == false) {
         std::cout << "ERROR: not able to open " << infilename << std::endl;

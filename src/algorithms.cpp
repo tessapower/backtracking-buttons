@@ -20,12 +20,14 @@ std::optional<Coord> next_coord(Coord current) {
 void process_image() {
     std::vector<Bounds> buttons = find_buttons();
 
-    // check if buttons are broken
+    // TODO: check if buttons are broken;
 
     for (auto const& b : buttons) {
         draw_points(b.points_on_bounds(), kColorGreen);
-        const Circle c{b.center(), static_cast<int>((b.width()/2.0)*0.93)};
-        draw_points(c.points_on_circumference(), kColorRed);
+        const Circle inner{b.center(), static_cast<int>((b.width()/2.0)*0.93)};
+        draw_points(inner.points_on_circumference(), kColorRed);
+        const Circle outer{b.center(), static_cast<int>((b.width()/2.0)*1.1)};
+        draw_points(outer.points_on_circumference(), kColorRed);
     }
 }
 
@@ -39,6 +41,10 @@ std::vector<Bounds> find_buttons() {
             Bounds button(*coord);
             discover_bounds(*coord, button);
             buttons.push_back(button);
+        }
+
+        if (!is_button_color(*p)) {
+            p->loaddata(0, 0, 0);
         }
 
         p->setexclude(true);
@@ -62,7 +68,7 @@ void discover_bounds(Coord const& coord, Bounds& discovered) {
 
     // do the thing
     p->setexclude(true);
-    p->loaddata(0, 255, 0);
+//    p->loaddata(0, 255, 0);
     discovered.expand_to_include(coord);
 
     // recurse
