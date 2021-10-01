@@ -1,4 +1,4 @@
-#include "../include/Coord.h"
+#include "Coord.h"
 
 Coord::Coord(): x{0}, y{0} {}
 Coord::Coord(int X, int Y): x{X}, y{Y} {}

@@ -6,6 +6,7 @@
 
 #include "Coord.h"
 #include "pixel_class.h"
+#include "Bounds.h"
 
 void process_image();
 

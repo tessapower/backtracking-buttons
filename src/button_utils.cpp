@@ -1,6 +1,6 @@
-#include <pixel_class.h>
-#include <button_utils.h>
-#include <statics.h>
+#include "pixel_class.h"
+#include "button_utils.h"
+#include "statics.h"
 
 std::optional<Coord> next_coord(Coord current) {
     std::optional<Coord> next = current;
