@@ -1,35 +1,30 @@
-#include <iostream>
-#include <fstream>
-
 #include <pixel_class.h>
 #include <button_utils.h>
 #include <statics.h>
 
-Coord next_coord(Coord current) {
-    int x, y = current.y;
+std::optional<Coord> next_coord(Coord current) {
+    std::optional<Coord> next = current;
     if (current.x < screenx - 1) {
-        x = current.x + 1;
+        next->x += 1;
     } else {
-        x = 0;
-        y = current.y + 1;
+        next->x = 0;
+        next->y += 1;
     }
 
-    return Coord{x, y};
+    return (next->y >= screeny) ? std::nullopt : next;
 };
 
 // Iterates over image to find and color buttons
 void process_image() {
-    Coord coord;
-    pixel_class *p;
+    std::optional<Coord> coord;
+    while ((coord = next_coord(*coord)) != std::nullopt) {
+        pixel_class *p = get_pixel(*coord);
 
-    while ((p = get_pixel(coord)) != nullptr) {
         if (is_button_color(*p) && !p->getexclude()) {
-            fill_button(coord);
+            fill_button(*coord);
         }
 
         p->setexclude(true);
-
-        coord = next_coord(coord);
     }
 
     // check if broken
@@ -61,35 +56,5 @@ void fill_button(Coord coord) {
 }
 
 pixel_class* get_pixel(Coord const& c) {
-    const bool is_within_x_bounds = (c.x < screenx) && (c.x >= 0);
-    const bool is_within_y_bounds = (c.y < screeny) && (c.y >= 0);
-    if (is_within_x_bounds && is_within_y_bounds) {
-        return &picture[c.y][c.x];
-    }
-
-    return nullptr;
-}
-
-void output_result(std::string const& output_filename) {
-   std::fstream output_file;
-   std::cout << "Writing to " << output_filename << std::endl;
-   output_file.open(output_filename.c_str(), std::fstream::out);
-   if (!output_file.is_open()) {
-       throw std::runtime_error("Unable to write to " + output_filename);
-   }
-   // Needed for .ppm file formatting
-   output_file << "P3" << std::endl;
-   output_file << "# " << output_filename << std::endl;
-   output_file << screenx << " " << screeny << std::endl;
-   output_file << maxcolours << std::endl;
-
-   // pixel rgb values
-   for (int y = 0; y < screeny; ++y) {
-       for (int x = 0; x < screenx; ++x) {
-           picture[y][x].datatofile(output_file);
-       }
-       output_file << std::endl;
-   }
-   output_file.close();
-   std::cout << "Funush!" << std::endl;
+    return &picture[c.y][c.x];
 }
