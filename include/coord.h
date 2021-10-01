@@ -1,7 +1,7 @@
 #ifndef COORD_H
 #define COORD_H
 
-#include <vector>
+#include <array>
 
 // 2D cartesian coordinate
 class Coord {

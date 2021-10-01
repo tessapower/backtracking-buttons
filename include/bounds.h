@@ -1,6 +1,8 @@
 #ifndef BOUNDS_H
 #define BOUNDS_H
 
+#include <vector>
+
 #include "coord.h"
 
 class Bounds {
