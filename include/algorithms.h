@@ -4,6 +4,7 @@
 #include <optional>
 #include <string>
 
+#include "color.h"
 #include "coord.h"
 #include "pixel_class.h"
 #include "bounds.h"
@@ -17,5 +18,7 @@ void discover_bounds(Coord const& coord, Bounds& discovered);
 std::vector<Bounds> find_buttons();
 
 pixel_class* get_pixel(Coord const& c);
+
+void draw_bounding_box(Bounds const& bounds, Color const& color);
 
 #endif //ALGORITHMS_H

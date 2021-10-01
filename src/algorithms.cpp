@@ -1,5 +1,6 @@
 #include "pixel_class.h"
 #include "algorithms.h"
+#include "color.h"
 #include "statics.h"
 
 std::optional<Coord> next_coord(Coord current) {

@@ -11,7 +11,7 @@ set(SOURCES
         src/pixel_class.cpp
         src/io.cpp
         src/bounds.cpp
-        )
+        include/color.h)
 set(HEADERS
         include/algorithms.h
         include/coord.h
@@ -19,7 +19,7 @@ set(HEADERS
         include/pixel_class.h
         include/io.h
         include/bounds.h
-        )
+        include/color.h)
 
 add_executable(main ${SOURCES} ${HEADERS} bin/main.cpp)
 
