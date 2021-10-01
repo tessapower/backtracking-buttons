@@ -17,14 +17,9 @@ public:
 
     [[nodiscard]] inline int width() const { return max_x - min_x; }
     [[nodiscard]] inline int height() const { return max_y - min_y; }
+    [[nodiscard]] Coord center() const;
     void expand_to_include(Coord const& c);
+    [[nodiscard]] std::vector<Coord> points_on_bounds() const;
 };
-
-//class Circle {
-//public:
-//    Coord origin;
-//    int radius;
-//    std::vector<Coord> points_on_circumference() const;
-//};
 
 #endif //BOUNDS_H
