@@ -19,6 +19,6 @@ std::vector<Bounds> find_buttons();
 
 pixel_class* get_pixel(Coord const& c);
 
-void draw_bounding_box(Bounds const& bounds, Color const& color);
+void draw_points(std::vector<Coord> const& coords, Color const& color);
 
 #endif //ALGORITHMS_H
