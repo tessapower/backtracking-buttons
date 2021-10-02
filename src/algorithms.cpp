@@ -49,7 +49,7 @@ std::vector<Bounds> find_buttons() {
     std::optional<Coord> coord;
     std::vector<Bounds> buttons = {};
     while ((coord = next_coord(*coord)) != std::nullopt) {
-        pixel_class *p = get_pixel(*coord);
+        auto *p = get_pixel(*coord);
 
         if (is_button_color(*p) && !p->getexclude()) {
             Bounds button(*coord);
@@ -135,11 +135,17 @@ void discover_bounds(Coord const& coord, Bounds& discovered) {
 }
 
 pixel_class* get_pixel(Coord const& c) {
-    return &picture[c.y][c.x];
+    // TODO: add function comments
+    return (c.x >= 0 && c.x < screenx && c.y >= 0 && c.y < screeny)
+        ? &picture[c.y][c.x]
+        : nullptr;
 }
 
 void draw_points(std::vector<Coord> const& coords, Color const& color) {
     for (auto& c : coords) {
-        get_pixel(c)->loaddata(color.R, color.G, color.B);
+        auto *p = get_pixel(c);
+        if (p != nullptr) {
+            p->loaddata(color.R, color.G, color.B);
+        }
     }
 }
