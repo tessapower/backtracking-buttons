@@ -57,6 +57,49 @@ std::vector<Bounds> find_buttons() {
     return buttons;
 }
 
+std::vector<Button> assess_buttons(std::vector<Bounds> const& bounds) {
+    // TODO: comment this function
+    std::vector<Button> assessed_buttons;
+
+    for (auto const& b : bounds) {
+        // inner circle
+        int radius = static_cast<int>((std::max(b.width(), b.height())/2.0)*0.93);
+        const Circle inner{b.center(), radius};
+        std::vector<Coord> inner_test_points = inner.points_on_circumference();
+        bool pass = true;
+        for (auto& point : inner_test_points) {
+            auto *p = get_pixel(point);
+            if (p != nullptr) {
+                if (!is_button_color(*p)) {
+                    pass = false;
+                    break;
+                }
+            }
+        }
+
+        // outer circle
+        radius = static_cast<int>((std::max(b.width(), b.height())/2.0)*1.2);
+        const Circle outer{b.center(), radius};
+        std::vector<Coord> outer_test_points = outer.points_on_circumference();
+        for (auto& point : outer_test_points) {
+            auto *p = get_pixel(point);
+            if (p != nullptr) {
+                if (is_button_color(*p)) {
+                    pass = false;
+                    break;
+                }
+            }
+        }
+
+        // check for 4 discrete islands
+
+        assessed_buttons.emplace_back(Button{b, pass});
+    }
+
+
+    return assessed_buttons;
+}
+
 // returns if the pixel is the color of a button
 bool is_button_color(pixel_class const& p) {
     return (p.getR() > 128);

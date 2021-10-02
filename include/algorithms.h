@@ -20,6 +20,8 @@ void discover_bounds(Coord const& coord, Bounds& discovered);
 
 std::vector<Bounds> find_buttons();
 
+std::vector<Button> assess_buttons(std::vector<Bounds> const& b);
+
 pixel_class* get_pixel(Coord const& c);
 
 void draw_points(std::vector<Coord> const& coords, Color const& color);
