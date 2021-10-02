@@ -10,6 +10,10 @@
 #include "coord.h"
 #include "pixel_class.h"
 
+// TODO: Mark functions that are noexcept
+// TODO: check for const correctness
+// TODO: comment functions
+
 void process_image();
 
 std::optional<Coord> next_coord(Coord current);
