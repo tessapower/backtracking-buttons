@@ -12,6 +12,8 @@
 
 void process_image();
 
+std::optional<Coord> next_coord(Coord current);
+
 bool is_button_color(pixel_class const& p);
 
 void discover_bounds(Coord const& coord, Bounds& discovered);

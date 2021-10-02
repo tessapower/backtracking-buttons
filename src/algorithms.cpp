@@ -4,6 +4,7 @@
 #include "algorithms.h"
 #include "circle.h"
 #include "color.h"
+#include "coord.h"
 #include "pixel_class.h"
 #include "statics.h"
 
