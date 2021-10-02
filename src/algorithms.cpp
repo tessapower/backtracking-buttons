@@ -1,3 +1,6 @@
+#include <cmath>
+
+#include "button.h"
 #include "algorithms.h"
 #include "circle.h"
 #include "color.h"

@@ -22,6 +22,7 @@ set(HEADERS
         include/bounds.h
         include/color.h
         include/circle.h
+        include/button.h
         )
 
 add_executable(main ${SOURCES} ${HEADERS} bin/main.cpp)

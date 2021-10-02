@@ -5,6 +5,7 @@
 #include <string>
 
 #include "bounds.h"
+#include "button.h"
 #include "color.h"
 #include "coord.h"
 #include "pixel_class.h"
