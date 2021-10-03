@@ -70,6 +70,20 @@ std::vector<Bounds> discover_button_bounds() {
     return bounds;
 }
 
+// TODO: refactor points -> coords/coord
+bool do_any_match(std::vector<Coord> const& points, bool (*predicate_fn)(pixel_class const& p)) {
+    for (auto& point : points) {
+        auto p = get_pixel(point);
+        if (p != nullptr) {
+            if (predicate_fn(*p)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 std::vector<Button> assess_buttons(std::vector<Bounds> const& bounds) {
     // TODO: comment this function
     std::vector<Button> assessed_buttons;
