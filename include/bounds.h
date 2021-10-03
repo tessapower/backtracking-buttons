@@ -14,8 +14,8 @@ public:
 
     Bounds()
         : min_x{0}, max_x{0}, min_y{0}, max_y{0} {}
-    explicit Bounds(Coord coord)
-        : min_x{coord.x}, max_x{coord.x}, min_y{coord.y}, max_y{coord.y} {}
+    Bounds(int min_x, int max_x, int min_y, int max_y)
+            : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {}
 
     [[nodiscard]] inline int width() const { return max_x - min_x; }
     [[nodiscard]] inline int height() const { return max_y - min_y; }

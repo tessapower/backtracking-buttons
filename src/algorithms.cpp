@@ -62,7 +62,7 @@ std::vector<Bounds> discover_button_bounds() {
         auto *p = get_pixel(*coord);
 
         if (is_button_color(*p) && !p->getexclude()) {
-            Bounds button(*coord);
+            Bounds button_bounds(coord->x, coord->x, coord->y, coord->y);
             discover_bounds(*coord, button);
             buttons.push_back(button);
         }
