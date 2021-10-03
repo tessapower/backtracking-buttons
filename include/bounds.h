@@ -21,7 +21,7 @@ public:
     [[nodiscard]] inline int height() const { return max_y - min_y; }
     [[nodiscard]] Coord center() const;
     void expand_to_include(Coord const& c);
-    [[nodiscard]] std::vector<Coord> points_on_bounds() const;
+    [[nodiscard]] std::vector<Coord> points_on_perimeter() const;
 };
 
 #endif //BOUNDS_H

@@ -7,7 +7,7 @@ void Bounds::expand_to_include(Coord const& c) {
     max_y = std::max(max_y, c.y);
 }
 
-std::vector<Coord> Bounds::points_on_bounds() const {
+std::vector<Coord> Bounds::points_on_perimeter() const {
     std::vector<Coord> points;
     // Top and bottom
     for (int x = min_x; x < max_x; ++x) {

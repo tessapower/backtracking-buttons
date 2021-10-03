@@ -37,7 +37,7 @@ void process_image() {
     std::vector<Button> buttons = assess_buttons(button_bounds);
 
     for (auto const& b : buttons) {
-        draw_points(b.bounds.points_on_bounds(),
+        draw_points(b.bounds.points_on_perimeter(),
                     b.is_broken ? kColorRed : kColorGreen);
     }
 }
