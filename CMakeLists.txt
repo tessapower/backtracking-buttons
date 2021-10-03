@@ -7,7 +7,7 @@ include_directories(include)
 set(SOURCES
         src/algorithms.cpp
         src/circle.cpp
-        src/coord.cpp
+        src/point.cpp
         src/io.cpp
         src/pixel_class.cpp
         src/rect.cpp
@@ -18,7 +18,7 @@ set(HEADERS
         include/button.h
         include/circle.h
         include/color.h
-        include/coord.h
+        include/point.h
         include/io.h
         include/pixel_class.h
         include/rect.h

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "coord.h"
+#include "point.h"
 
 class Rect {
 public:
@@ -19,9 +19,9 @@ public:
 
     [[nodiscard]] inline int width() const { return max_x - min_x; }
     [[nodiscard]] inline int height() const { return max_y - min_y; }
-    [[nodiscard]] Coord center() const;
-    void expand_to_include(Coord const& c);
-    [[nodiscard]] std::vector<Coord> points_on_perimeter() const;
+    [[nodiscard]] Point center() const;
+    void expand_to_include(Point const& c);
+    [[nodiscard]] std::vector<Point> points_on_perimeter() const;
 };
 
 #endif //RECT_H

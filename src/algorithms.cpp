@@ -4,8 +4,8 @@
 #include "algorithms.h"
 #include "circle.h"
 #include "color.h"
-#include "coord.h"
 #include "pixel_class.h"
+#include "point.h"
 #include "statics.h"
 
 // TODO: Document works for any size button
@@ -16,9 +16,9 @@
 // This is useful to visualise the process of checking for a broken buttons.
 #define DEBUG_VISUALIZATIONS true
 
-std::optional<Coord> next_coord(Coord current) {
+std::optional<Point> next_point(Point current) {
     // TODO: comment this function
-    std::optional<Coord> next = current;
+    std::optional<Point> next = current;
     if (current.x < screenx - 1) {
         next->x += 1;
     } else {
@@ -46,15 +46,15 @@ void process_image() {
 std::vector<Rect> discover_button_bounds() {
     std::vector<Rect> bounds = {};
 
-    std::optional<Coord> coord;
-    while ((coord = next_coord(*coord))) {
-        auto p = get_pixel(*coord);
+    std::optional<Point> point;
+    while ((point = next_point(*point))) {
+        auto p = get_pixel(*point);
 
         const bool did_discover_new_button = is_button_color(*p) && !p->getexclude();
         if (did_discover_new_button) {
             // Initialize our bounds to a 0-by-0 box which discover_bounds expands
-            Rect button_bounds(coord->x, coord->x, coord->y, coord->y);
-            discover_bounds(*coord, button_bounds);
+            Rect button_bounds(point->x, point->x, point->y, point->y);
+            discover_bounds(*point, button_bounds);
             bounds.push_back(button_bounds);
         }
 
@@ -70,8 +70,7 @@ std::vector<Rect> discover_button_bounds() {
     return bounds;
 }
 
-// TODO: refactor points -> coords/coord
-bool do_any_match(std::vector<Coord> const& points, bool (*predicate_fn)(pixel_class const& p)) {
+bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_class const& p)) {
     for (auto& point : points) {
         auto p = get_pixel(point);
         if (p != nullptr) {
@@ -110,47 +109,47 @@ std::vector<Button> assess_buttons(std::vector<Rect> const& bounds) {
 }
 
 // returns if the pixel is the color of a button
-bool is_button_color(pixel_class const& p) {
-    return p.getR() > 128;
+bool is_button_color(pixel_class const& px) {
+    return px.getR() > 128;
 }
 
-bool is_not_button_color(pixel_class const& p) {
-    return !is_button_color(p);
+bool is_not_button_color(pixel_class const& px) {
+    return !is_button_color(px);
 }
 
 // find the boundary of a discovered button by finding all connected pixels
-void discover_bounds(Coord const& coord, Rect& discovered) {
+void discover_bounds(Point const& point, Rect& discovered) {
     // TODO: tidy function comments
     // base case
-    auto p = get_pixel(coord);
-    if ((p == nullptr) || p->getexclude() || !is_button_color(*p)) {
+    auto px = get_pixel(point);
+    if ((px == nullptr) || px->getexclude() || !is_button_color(*px)) {
         return;
     }
 
     // do the thing
-    p->setexclude(true);
-//    p->loaddata(0, 255, 0);
-    discovered.expand_to_include(coord);
+    px->setexclude(true);
+//    px->loaddata(0, 255, 0);
+    discovered.expand_to_include(point);
 
     // recurse
-    for (auto& c : coord.neighbors()) {
-        discover_bounds(c, discovered);
+    for (auto& p : point.neighbors()) {
+        discover_bounds(p, discovered);
     }
 }
 
-pixel_class* get_pixel(Coord const& c) {
+pixel_class* get_pixel(Point const& p) {
     // TODO: add function comments
-    return (c.x >= 0 && c.x < screenx && c.y >= 0 && c.y < screeny)
-        ? &picture[c.y][c.x]
+    return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
+        ? &picture[p.y][p.x]
         : nullptr;
 }
 
-void draw_points(std::vector<Coord> const& coords, Color const& color) {
+void draw_points(std::vector<Point> const& points, Color const& color) {
     // TODO: add function comments
-    for (auto& c : coords) {
-        auto p = get_pixel(c);
-        if (p != nullptr) {
-            p->loaddata(color.R, color.G, color.B);
+    for (auto& p : points) {
+        auto px = get_pixel(p);
+        if (px != nullptr) {
+            px->loaddata(color.R, color.G, color.B);
         }
     }
 }

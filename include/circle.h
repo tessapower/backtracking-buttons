@@ -2,16 +2,16 @@
 #define CIRCLE_H
 
 #include <vector>
-#include "coord.h"
+#include "point.h"
 
 class Circle {
 public:
-    Coord origin;
+    Point origin;
     int radius;
 
-    Circle(Coord o, int r): origin{o},  radius{r} {};
+    Circle(Point o, int r): origin{o}, radius{r} {};
 
-    [[nodiscard]] std::vector<Coord> points_on_circumference() const;
+    [[nodiscard]] std::vector<Point> points_on_circumference() const;
 };
 
 #endif //CIRCLE_H
