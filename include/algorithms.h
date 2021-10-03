@@ -16,7 +16,9 @@
 
 void process_image();
 
-std::vector<Button> discover_buttons();
+std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds);
+
+std::vector<Rect> discover_all_button_bounds();
 
 std::optional<Point> next_point(Point current);
 
