@@ -31,11 +31,13 @@ void loadButtons() {
 
 void output_result(std::string const& output_filename) {
     std::fstream output_file;
+
     std::cout << "Writing to " << output_filename << std::endl;
     output_file.open(output_filename.c_str(), std::fstream::out);
     if (!output_file.is_open()) {
         throw std::runtime_error("Unable to write to " + output_filename);
     }
+
     // Needed for .ppm file formatting
     output_file << "P3" << std::endl;
     output_file << "# " << output_filename << std::endl;
@@ -49,6 +51,6 @@ void output_result(std::string const& output_filename) {
         }
         output_file << std::endl;
     }
+
     output_file.close();
-    std::cout << "Funush!" << std::endl;
 }
