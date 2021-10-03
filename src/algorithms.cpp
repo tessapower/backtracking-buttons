@@ -93,6 +93,11 @@ Button assess_button(Rect const& bounds) {
     const Circle inner{bounds.center(), inner_radius};
     const Circle outer{bounds.center(), outer_radius};
 
+    #if DEBUG_VISUALIZATIONS
+        draw_points(inner.points_on_circumference(), kColorRed);
+        draw_points(inner.points_on_circumference(), kColorRed);
+    #endif
+
     is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
     is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
 
