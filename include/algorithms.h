@@ -4,11 +4,11 @@
 #include <optional>
 #include <string>
 
-#include "rect.h"
 #include "button.h"
 #include "color.h"
 #include "coord.h"
 #include "pixel_class.h"
+#include "rect.h"
 
 // TODO: Mark functions that are noexcept
 // TODO: check for const correctness
