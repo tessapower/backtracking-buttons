@@ -44,11 +44,11 @@ std::vector<Button> discover_buttons() {
             buttons.emplace_back(assess_button(button_bounds));
         }
 
-        #if DEBUG_VISUALIZATIONS
-            if (!is_button_color(*p)) {
-                p->loaddata(kColorBlack.R, kColorBlack.G, kColorBlack.B);
-            }
-        #endif
+//        #if DEBUG_VISUALIZATIONS
+//            if (!is_button_color(*p)) {
+//                p->loaddata(kColorBlack.R, kColorBlack.G, kColorBlack.B);
+//            }
+//        #endif
 
         p->setexclude(true);
     }
@@ -88,7 +88,9 @@ void discover_bounds(Point const& point, Rect& discovered) {
 
     // do the thing
     px->setexclude(true);
-//    px->loaddata(0, 255, 0);
+//    #if DEBUG_VISUALIZATIONS
+//        px->loaddata(kColorGreen.R, kColorGreen.G, kColorGreen.B);
+//    #endif
     discovered.expand_to_include(point);
 
     // recurse
@@ -113,16 +115,17 @@ Button assess_button(Rect const& bounds) {
     const Circle inner{bounds.center(), inner_radius};
     const Circle outer{bounds.center(), outer_radius};
 
-#if DEBUG_VISUALIZATIONS
-    draw_points(inner.points_on_circumference(), kColorRed);
-    draw_points(inner.points_on_circumference(), kColorRed);
-#endif
-
     is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
     is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
 
     int num_btn_holes = 0;
     // check for 4 discrete islands
+
+    // FIXME: drawing funny circles
+//    #if DEBUG_VISUALIZATIONS
+//        draw_points(inner.points_on_circumference(), kColorOrange);
+//        draw_points(outer.points_on_circumference(), kColorOrange);
+//    #endif
 
     return Button{bounds, is_broken, num_btn_holes};
 }

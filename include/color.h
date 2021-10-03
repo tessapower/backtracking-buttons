@@ -15,5 +15,7 @@ public:
 const Color kColorGreen{0, 255, 0};
 const Color kColorRed{255, 0, 0};
 const Color kColorBlack{0, 0, 0};
+const Color kColorBlue{0, 0, 255};
+const Color kColorOrange{255, 165, 0};
 
 #endif //COLOR_H
