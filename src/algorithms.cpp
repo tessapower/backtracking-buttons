@@ -33,16 +33,12 @@ std::optional<Coord> next_coord(Coord current) {
 void process_image() {
     // TODO: comment this function
     std::vector<Bounds> button_bounds = discover_button_bounds();
+
     std::vector<Button> buttons = assess_buttons(button_bounds);
 
-    for (auto const& b : assessed_buttons) {
-
-        if (b.pass) {
-            draw_points(b.bounds.points_on_bounds(), kColorGreen);
-        } else {
-            draw_points(b.bounds.points_on_bounds(), kColorRed);
-        }
-
+    for (auto const& b : buttons) {
+        draw_points(b.bounds.points_on_bounds(),
+                    b.is_broken ? kColorRed : kColorGreen);
     }
 }
 
