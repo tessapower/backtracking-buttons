@@ -44,15 +44,18 @@ void process_image() {
 
 // TODO: comment this function
 std::vector<Bounds> discover_button_bounds() {
-    std::optional<Coord> coord;
-    std::vector<Bounds> buttons = {};
-    while ((coord = next_coord(*coord)) != std::nullopt) {
-        auto *p = get_pixel(*coord);
+    std::vector<Bounds> bounds = {};
 
-        if (is_button_color(*p) && !p->getexclude()) {
+    std::optional<Coord> coord;
+    while ((coord = next_coord(*coord))) {
+        auto p = get_pixel(*coord);
+
+        const bool did_discover_new_button = is_button_color(*p) && !p->getexclude();
+        if (did_discover_new_button) {
+            // Initialize our bounds to a 0-by-0 box which discover_bounds expands
             Bounds button_bounds(coord->x, coord->x, coord->y, coord->y);
-            discover_bounds(*coord, button);
-            buttons.push_back(button);
+            discover_bounds(*coord, button_bounds);
+            bounds.push_back(button_bounds);
         }
 
         #if DEBUG_VISUALIZATIONS
@@ -64,7 +67,7 @@ std::vector<Bounds> discover_button_bounds() {
         p->setexclude(true);
     }
 
-    return buttons;
+    return bounds;
 }
 
 std::vector<Button> assess_buttons(std::vector<Bounds> const& bounds) {
