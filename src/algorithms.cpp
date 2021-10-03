@@ -36,14 +36,6 @@ void process_image() {
     std::vector<Button> buttons = assess_buttons(button_bounds);
 
     for (auto const& b : assessed_buttons) {
-        // TODO: Remove debug drawings
-//        // inner circle
-//        const Circle inner{b.bounds.center(), static_cast<int>((b.bounds.width()/2.0)*0.93)};
-//        draw_points(inner.points_on_circumference(), kColorRed);
-//        // outer circle
-//        double radius = (std::max(b.bounds.width(), b.bounds.height())/2.0)*1.15;
-//        const Circle outer{b.bounds.center(), static_cast<int>(radius)};
-//        draw_points(outer.points_on_circumference(), kColorRed);
 
         if (b.pass) {
             draw_points(b.bounds.points_on_bounds(), kColorGreen);
