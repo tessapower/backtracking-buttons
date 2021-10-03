@@ -5,7 +5,7 @@
 
 struct Button {
     Bounds bounds;
-    bool pass{};
+    bool is_broken{};
 };
 
 #endif //BUTTON_H
