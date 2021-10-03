@@ -135,7 +135,7 @@ bool is_not_button_color(pixel_class const& p) {
 void discover_bounds(Coord const& coord, Bounds& discovered) {
     // TODO: tidy function comments
     // base case
-    auto *p = get_pixel(coord);
+    auto p = get_pixel(coord);
     if ((p == nullptr) || p->getexclude() || !is_button_color(*p)) {
         return;
     }
@@ -161,7 +161,7 @@ pixel_class* get_pixel(Coord const& c) {
 void draw_points(std::vector<Coord> const& coords, Color const& color) {
     // TODO: add function comments
     for (auto& c : coords) {
-        auto *p = get_pixel(c);
+        auto p = get_pixel(c);
         if (p != nullptr) {
             p->loaddata(color.R, color.G, color.B);
         }
