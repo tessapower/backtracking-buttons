@@ -125,7 +125,11 @@ std::vector<Button> assess_buttons(std::vector<Bounds> const& bounds) {
 
 // returns if the pixel is the color of a button
 bool is_button_color(pixel_class const& p) {
-    return (p.getR() > 128);
+    return p.getR() > 128;
+}
+
+bool is_not_button_color(pixel_class const& p) {
+    return !is_button_color(p);
 }
 
 // find the boundary of a discovered button by finding all connected pixels
