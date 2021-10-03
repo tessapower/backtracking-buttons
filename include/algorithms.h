@@ -24,7 +24,7 @@ bool is_not_button_color(pixel_class const& p);
 
 void discover_bounds(Coord const& coord, Bounds& discovered);
 
-std::vector<Bounds> find_buttons();
+std::vector<Bounds> discover_button_bounds();
 
 std::vector<Button> assess_buttons(std::vector<Bounds> const& b);
 

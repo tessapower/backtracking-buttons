@@ -32,9 +32,8 @@ std::optional<Coord> next_coord(Coord current) {
 // Iterates over image to find and color buttons
 void process_image() {
     // TODO: comment this function
-    std::vector<Bounds> buttons = find_buttons();
-
-    std::vector<Button> assessed_buttons = assess_buttons(buttons);
+    std::vector<Bounds> button_bounds = discover_button_bounds();
+    std::vector<Button> buttons = assess_buttons(button_bounds);
 
     for (auto const& b : assessed_buttons) {
         // TODO: Remove debug drawings
@@ -55,8 +54,8 @@ void process_image() {
     }
 }
 
-std::vector<Bounds> find_buttons() {
-    // TODO: comment this function
+// TODO: comment this function
+std::vector<Bounds> discover_button_bounds() {
     std::optional<Coord> coord;
     std::vector<Bounds> buttons = {};
     while ((coord = next_coord(*coord)) != std::nullopt) {
