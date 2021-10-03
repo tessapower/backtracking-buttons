@@ -16,6 +16,8 @@
 
 void process_image();
 
+std::vector<Button> discover_buttons();
+
 std::optional<Point> next_point(Point current);
 
 bool is_button_color(pixel_class const& px);
@@ -24,9 +26,7 @@ bool is_not_button_color(pixel_class const& px);
 
 void discover_bounds(Point const& point, Rect& discovered);
 
-std::vector<Rect> discover_button_bounds();
-
-std::vector<Button> assess_buttons(std::vector<Rect> const& b);
+Button assess_button(Rect const& bounds);
 
 pixel_class* get_pixel(Point const& p);
 
