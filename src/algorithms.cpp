@@ -16,19 +16,6 @@
 // This is useful to visualise the process of checking for a broken buttons.
 #define DEBUG_VISUALIZATIONS true
 
-std::optional<Point> next_point(Point current) {
-    // TODO: comment this function
-    std::optional<Point> next = current;
-    if (current.x < screenx - 1) {
-        next->x += 1;
-    } else {
-        next->x = 0;
-        next->y += 1;
-    }
-
-    return (next->y >= screeny) ? std::nullopt : next;
-}
-
 // Iterates over image to find and color buttons
 // TODO: comment this function
 void process_image() {
@@ -69,51 +56,25 @@ std::vector<Button> discover_buttons() {
     return buttons;
 }
 
-bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_class const& p)) {
-    for (auto& point : points) {
-        auto p = get_pixel(point);
-        if (p != nullptr) {
-            if (predicate_fn(*p)) {
-                return true;
-            }
-        }
+std::optional<Point> next_point(Point current) {
+    // TODO: comment this function
+    std::optional<Point> next = current;
+    if (current.x < screenx - 1) {
+        next->x += 1;
+    } else {
+        next->x = 0;
+        next->y += 1;
     }
 
-    return false;
+    return (next->y >= screeny) ? std::nullopt : next;
 }
 
-// TODO: comment this function
-Button assess_button(Rect const& bounds) {
-    bool is_broken = false;
 
-    const int radius = static_cast<int>(std::max(bounds.width(), bounds.height()) / 2.0);
-    const int inner_radius = static_cast<int>(radius * 0.93);
-    const int outer_radius = static_cast<int>(radius * 1.2);
-
-    const Circle inner{bounds.center(), inner_radius};
-    const Circle outer{bounds.center(), outer_radius};
-
-    #if DEBUG_VISUALIZATIONS
-        draw_points(inner.points_on_circumference(), kColorRed);
-        draw_points(inner.points_on_circumference(), kColorRed);
-    #endif
-
-    is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
-    is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
-
-    int num_btn_holes = 0;
-    // check for 4 discrete islands
-
-    return Button{bounds, is_broken, num_btn_holes};
-}
-
-// returns if the pixel is the color of a button
-bool is_button_color(pixel_class const& px) {
-    return px.getR() > 128;
-}
-
-bool is_not_button_color(pixel_class const& px) {
-    return !is_button_color(px);
+pixel_class* get_pixel(Point const& p) {
+    // TODO: add function comments
+    return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
+           ? &picture[p.y][p.x]
+           : nullptr;
 }
 
 // find the boundary of a discovered button by finding all connected pixels
@@ -136,11 +97,51 @@ void discover_bounds(Point const& point, Rect& discovered) {
     }
 }
 
-pixel_class* get_pixel(Point const& p) {
-    // TODO: add function comments
-    return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
-        ? &picture[p.y][p.x]
-        : nullptr;
+// returns if the pixel is the color of a button
+bool is_button_color(pixel_class const& px) {
+    return px.getR() > 128;
+}
+
+// TODO: comment this function
+Button assess_button(Rect const& bounds) {
+    bool is_broken = false;
+
+    const int radius = static_cast<int>(std::max(bounds.width(), bounds.height()) / 2.0);
+    const int inner_radius = static_cast<int>(radius * 0.93);
+    const int outer_radius = static_cast<int>(radius * 1.2);
+
+    const Circle inner{bounds.center(), inner_radius};
+    const Circle outer{bounds.center(), outer_radius};
+
+#if DEBUG_VISUALIZATIONS
+    draw_points(inner.points_on_circumference(), kColorRed);
+    draw_points(inner.points_on_circumference(), kColorRed);
+#endif
+
+    is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
+    is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
+
+    int num_btn_holes = 0;
+    // check for 4 discrete islands
+
+    return Button{bounds, is_broken, num_btn_holes};
+}
+
+bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_class const& p)) {
+    for (auto& point : points) {
+        auto p = get_pixel(point);
+        if (p != nullptr) {
+            if (predicate_fn(*p)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool is_not_button_color(pixel_class const& px) {
+    return !is_button_color(px);
 }
 
 void draw_points(std::vector<Point> const& points, Color const& color) {

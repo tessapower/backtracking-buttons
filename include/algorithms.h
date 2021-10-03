@@ -20,15 +20,18 @@ std::vector<Button> discover_buttons();
 
 std::optional<Point> next_point(Point current);
 
-bool is_button_color(pixel_class const& px);
-
-bool is_not_button_color(pixel_class const& px);
+pixel_class* get_pixel(Point const& p);
 
 void discover_bounds(Point const& point, Rect& discovered);
 
+bool is_button_color(pixel_class const& px);
+
 Button assess_button(Rect const& bounds);
 
-pixel_class* get_pixel(Point const& p);
+bool do_any_match(std::vector<Point> const& points,
+                  bool (*predicate_fn)(pixel_class const& p));
+
+bool is_not_button_color(pixel_class const& px);
 
 void draw_points(std::vector<Point> const& points, Color const& color);
 
