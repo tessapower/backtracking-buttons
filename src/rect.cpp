@@ -1,13 +1,13 @@
-#include "bounds.h"
+#include "rect.h"
 
-void Bounds::expand_to_include(Coord const& c) {
+void Rect::expand_to_include(Coord const& c) {
     min_x = std::min(min_x, c.x);
     max_x = std::max(max_x, c.x);
     min_y = std::min(min_y, c.y);
     max_y = std::max(max_y, c.y);
 }
 
-std::vector<Coord> Bounds::points_on_perimeter() const {
+std::vector<Coord> Rect::points_on_perimeter() const {
     std::vector<Coord> points;
     // Top and bottom
     for (int x = min_x; x < max_x; ++x) {
@@ -24,7 +24,7 @@ std::vector<Coord> Bounds::points_on_perimeter() const {
     return points;
 }
 
-[[nodiscard]] Coord Bounds::center() const {
+[[nodiscard]] Coord Rect::center() const {
     const int x = (max_x + min_x)/2;
     const int y = (max_y + min_y)/2;
 

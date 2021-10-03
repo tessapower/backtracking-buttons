@@ -1,20 +1,20 @@
-#ifndef BOUNDS_H
-#define BOUNDS_H
+#ifndef RECT_H
+#define RECT_H
 
 #include <vector>
 
 #include "coord.h"
 
-class Bounds {
+class Rect {
 public:
     int min_x;
     int max_x;
     int min_y;
     int max_y;
 
-    Bounds()
+    Rect()
         : min_x{0}, max_x{0}, min_y{0}, max_y{0} {}
-    Bounds(int min_x, int max_x, int min_y, int max_y)
+    Rect(int min_x, int max_x, int min_y, int max_y)
             : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {}
 
     [[nodiscard]] inline int width() const { return max_x - min_x; }
@@ -24,4 +24,4 @@ public:
     [[nodiscard]] std::vector<Coord> points_on_perimeter() const;
 };
 
-#endif //BOUNDS_H
+#endif //RECT_H

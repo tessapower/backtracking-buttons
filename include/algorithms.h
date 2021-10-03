@@ -4,7 +4,7 @@
 #include <optional>
 #include <string>
 
-#include "bounds.h"
+#include "rect.h"
 #include "button.h"
 #include "color.h"
 #include "coord.h"
@@ -22,11 +22,11 @@ bool is_button_color(pixel_class const& p);
 
 bool is_not_button_color(pixel_class const& p);
 
-void discover_bounds(Coord const& coord, Bounds& discovered);
+void discover_bounds(Coord const& coord, Rect& discovered);
 
-std::vector<Bounds> discover_button_bounds();
+std::vector<Rect> discover_button_bounds();
 
-std::vector<Button> assess_buttons(std::vector<Bounds> const& b);
+std::vector<Button> assess_buttons(std::vector<Rect> const& b);
 
 pixel_class* get_pixel(Coord const& c);
 

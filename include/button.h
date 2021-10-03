@@ -1,10 +1,10 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "bounds.h"
+#include "rect.h"
 
 struct Button {
-    Bounds bounds;
+    Rect bounds;
     bool is_broken{};
 };
 

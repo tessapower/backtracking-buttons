@@ -10,7 +10,7 @@ set(SOURCES
         src/statics.cpp
         src/pixel_class.cpp
         src/io.cpp
-        src/bounds.cpp
+        src/rect.cpp
         src/circle.cpp
         )
 set(HEADERS
@@ -19,7 +19,7 @@ set(HEADERS
         include/statics.h
         include/pixel_class.h
         include/io.h
-        include/bounds.h
+        include/rect.h
         include/color.h
         include/circle.h
         include/button.h

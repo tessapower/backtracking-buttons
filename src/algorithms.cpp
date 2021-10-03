@@ -32,7 +32,7 @@ std::optional<Coord> next_coord(Coord current) {
 // Iterates over image to find and color buttons
 void process_image() {
     // TODO: comment this function
-    std::vector<Bounds> button_bounds = discover_button_bounds();
+    std::vector<Rect> button_bounds = discover_button_bounds();
 
     std::vector<Button> buttons = assess_buttons(button_bounds);
 
@@ -43,8 +43,8 @@ void process_image() {
 }
 
 // TODO: comment this function
-std::vector<Bounds> discover_button_bounds() {
-    std::vector<Bounds> bounds = {};
+std::vector<Rect> discover_button_bounds() {
+    std::vector<Rect> bounds = {};
 
     std::optional<Coord> coord;
     while ((coord = next_coord(*coord))) {
@@ -53,7 +53,7 @@ std::vector<Bounds> discover_button_bounds() {
         const bool did_discover_new_button = is_button_color(*p) && !p->getexclude();
         if (did_discover_new_button) {
             // Initialize our bounds to a 0-by-0 box which discover_bounds expands
-            Bounds button_bounds(coord->x, coord->x, coord->y, coord->y);
+            Rect button_bounds(coord->x, coord->x, coord->y, coord->y);
             discover_bounds(*coord, button_bounds);
             bounds.push_back(button_bounds);
         }
@@ -85,7 +85,7 @@ bool do_any_match(std::vector<Coord> const& points, bool (*predicate_fn)(pixel_c
 }
 
 // TODO: comment this function
-std::vector<Button> assess_buttons(std::vector<Bounds> const& bounds) {
+std::vector<Button> assess_buttons(std::vector<Rect> const& bounds) {
     std::vector<Button> assessed_buttons;
 
     for (auto const& b : bounds) {
@@ -119,7 +119,7 @@ bool is_not_button_color(pixel_class const& p) {
 }
 
 // find the boundary of a discovered button by finding all connected pixels
-void discover_bounds(Coord const& coord, Bounds& discovered) {
+void discover_bounds(Coord const& coord, Rect& discovered) {
     // TODO: tidy function comments
     // base case
     auto p = get_pixel(coord);
