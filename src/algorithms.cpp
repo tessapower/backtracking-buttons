@@ -16,7 +16,7 @@ constexpr int kNumRequiredButtonHoles = 4;
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
-#define DEBUG_VISUALIZATIONS false
+#define DEBUG_VISUALIZATIONS true
 
 // TODO: comment this function
 void process_image() {
@@ -24,7 +24,7 @@ void process_image() {
 
     for (auto const& button : buttons) {
         draw_points(button.bounds.points_on_perimeter(),
-                    button.is_broken ? kColorRed : kColorGreen);
+                    button.is_broken ? Color::Red() : Color::Green());
     }
 }
 
@@ -57,8 +57,8 @@ Button assess_button(Rect const& bounds) {
     is_broken |= count_button_holes(bounds) != kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
-    draw_points(inner.points_on_circumference(), kColorLightBlue);
-    draw_points(outer.points_on_circumference(), kColorLightBlue);
+    draw_points(inner.points_on_circumference(), Color::LightBlue());
+    draw_points(outer.points_on_circumference(), Color::LightBlue());
 #endif
 
     return Button{bounds, is_broken};
@@ -115,7 +115,7 @@ void is_touching_bounding_box(Point const& point, Rect const& button_bounds, boo
 
 #if DEBUG_VISUALIZATIONS
     if (!is_touching) {
-        pixel->loaddata(kColorLightBlue.R, kColorLightBlue.G, kColorLightBlue.B);
+        pixel->loaddata(Color::LightBlue().R, Color::LightBlue().G, Color::LightBlue().B);
     }
 #endif
 }

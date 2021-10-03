@@ -10,11 +10,9 @@ public:
     const uint8_t B;
 
     Color(uint8_t r, uint8_t g, uint8_t b) noexcept : R{r}, G{g}, B{b} {};
+    static Color Red();
+    static Color Green();
+    static Color LightBlue();
 };
-
-const Color kColorGreen{0, 204, 102};
-const Color kColorRed{204, 0, 0};
-const Color kColorBlack{0, 0, 0};
-const Color kColorLightBlue{0, 127, 255};
 
 #endif //COLOR_H
