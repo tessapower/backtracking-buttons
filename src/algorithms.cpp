@@ -12,6 +12,10 @@
 // TODO: Document C++ standard
 // TODO: Document Styleguide
 
+// Setting this to true will visually color all test points in the output image.
+// This is useful to visualise the process of checking for a broken buttons.
+#define DEBUG_VISUALIZATIONS true
+
 std::optional<Coord> next_coord(Coord current) {
     // TODO: comment this function
     std::optional<Coord> next = current;
@@ -64,9 +68,11 @@ std::vector<Bounds> find_buttons() {
             buttons.push_back(button);
         }
 
-        if (!is_button_color(*p)) {
-            p->loaddata(0, 0, 0);
-        }
+        #if DEBUG_VISUALIZATIONS
+            if (!is_button_color(*p)) {
+                p->loaddata(0, 0, 0);
+            }
+        #endif
 
         p->setexclude(true);
     }
