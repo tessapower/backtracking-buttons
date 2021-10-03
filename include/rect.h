@@ -22,6 +22,8 @@ public:
     [[nodiscard]] Point center() const;
     void expand_to_include(Point const& c);
     [[nodiscard]] std::vector<Point> points_on_perimeter() const;
+    [[nodiscard]] bool is_point_on_perimeter(Point const& p) const;
+    [[nodiscard]] bool contains_point(Point const& p) const;
 };
 
 #endif //RECT_H

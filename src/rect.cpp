@@ -30,3 +30,11 @@ std::vector<Point> Rect::points_on_perimeter() const {
 
     return Point{x, y};
 }
+
+bool Rect::is_point_on_perimeter(Point const& p) const {
+    return p.x == min_x || p.x == max_x || p.y == min_y || p.y == max_y;
+}
+
+bool Rect::contains_point(Point const& p) const {
+    return p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y;
+}

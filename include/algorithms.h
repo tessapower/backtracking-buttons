@@ -20,7 +20,7 @@ std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds);
 
 std::vector<Rect> discover_all_button_bounds();
 
-std::optional<Point> next_point(Point current);
+std::optional<Point> next_point(Point const& current, Rect const& rect);
 
 pixel_class* get_pixel(Point const& p);
 
@@ -29,6 +29,10 @@ void discover_bounds(Point const& point, Rect& discovered);
 bool is_button_color(pixel_class const& px);
 
 Button assess_button(Rect const& bounds);
+
+int count_button_holes(Rect const& button_bounds);
+
+void is_touching_bounding_box(Point const& point, Rect const& button_bounds, bool &is_touching);
 
 bool do_any_match(std::vector<Point> const& points,
                   bool (*predicate_fn)(pixel_class const& p));

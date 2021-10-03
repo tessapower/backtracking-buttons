@@ -12,10 +12,9 @@ public:
     Color(uint8_t r, uint8_t g, uint8_t b) noexcept : R{r}, G{g}, B{b} {};
 };
 
-const Color kColorGreen{0, 255, 0};
-const Color kColorRed{255, 0, 0};
+const Color kColorGreen{0, 204, 102};
+const Color kColorRed{204, 0, 0};
 const Color kColorBlack{0, 0, 0};
-const Color kColorBlue{0, 0, 255};
 const Color kColorLightBlue{0, 127, 255};
 
 #endif //COLOR_H
