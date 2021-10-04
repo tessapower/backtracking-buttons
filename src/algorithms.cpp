@@ -78,15 +78,20 @@ int count_button_holes(Rect const& button_bounds) {
 
     // iterate over image of button
     std::optional<Point> point = Point{button_bounds.min_x, button_bounds.min_y};
-    while ((point = next_point(*point, button_bounds))) {
+    while ((point = next_point_in_rect(*point, button_bounds))) {
         auto px = get_pixel(*point);
 
-        bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
+        const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
         if (did_discover_new_empty_area) {
-            bool is_touching = false;
-            is_touching_bounding_box(*point, button_bounds, is_touching);
-            if (!is_touching) {
+            std::optional<std::vector<Point>> visited_points = std::nullopt;
+#if DEBUG_VISUALIZATIONS
+            visited_points = std::vector<Point>{};
+#endif
+            if (!is_touching_bounding_box(*point, button_bounds, visited_points)) {
                 num_btn_holes += 1;
+#if DEBUG_VISUALIZATIONS
+                draw_points(*visited_points, Color::LightBlue());
+#endif
             }
         }
 
@@ -97,27 +102,30 @@ int count_button_holes(Rect const& button_bounds) {
 }
 
 // TODO: Document this too!
-void is_touching_bounding_box(Point const& point, Rect const& button_bounds, bool &is_touching) {
+bool is_touching_bounding_box(Point const& point,
+                              Rect const& button_bounds,
+                              std::optional<std::vector<Point>> &visited_points) {
     auto pixel = get_pixel(point);
+    if (pixel->getexclude() || is_button_color(*pixel)) {
+        return false;
+    }
+
+    // Tracking visited points is optional so points are only appended to the
+    // vector if a vector is provided.
+    if (visited_points) {
+        visited_points->emplace_back(point);
+    }
     pixel->setexclude(true);
 
-    is_touching |= button_bounds.is_point_on_perimeter(point);
-
+    bool is_point_touching = button_bounds.is_point_on_perimeter(point);
     for (auto& p : point.neighbors()) {
         if (!button_bounds.contains_point(p)) {
             continue;
         }
-        auto neighbour_pixel = get_pixel(p);
-        if (!neighbour_pixel->getexclude() && is_not_button_color(*neighbour_pixel)) {
-            is_touching_bounding_box(p, button_bounds, is_touching);
-        }
+        is_point_touching |= is_touching_bounding_box(p, button_bounds, visited_points);
     }
 
-#if DEBUG_VISUALIZATIONS
-    if (!is_touching) {
-        pixel->loaddata(Color::LightBlue().R, Color::LightBlue().G, Color::LightBlue().B);
-    }
-#endif
+    return is_point_touching;
 }
 
 // TODO: comment this function
@@ -126,7 +134,7 @@ std::vector<Rect> discover_all_button_bounds() {
 
     Rect size_of_picture = Rect{0, screenx, 0, screeny};
     std::optional<Point> point;
-    while ((point = next_point(*point, size_of_picture))) {
+    while ((point = next_point_in_rect(*point, size_of_picture))) {
         auto p = get_pixel(*point);
 
         const bool did_discover_new_button = is_button_color(*p) && !p->getexclude();
@@ -144,7 +152,7 @@ std::vector<Rect> discover_all_button_bounds() {
 }
 
 // TODO: comment this function
-std::optional<Point> next_point(Point const& current, Rect const& rect) {
+std::optional<Point> next_point_in_rect(Point const& current, Rect const& rect) {
     std::optional<Point> next = current;
     if (current.x < rect.max_x - 1) {
         next->x += 1;
