@@ -21,7 +21,7 @@ std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds);
 
 std::vector<Rect> discover_all_button_bounds();
 
-std::optional<Point> next_point_in_rect(Point const& current, Rect const& rect);
+std::optional<Point> next_point_in_rect(std::optional<Point> const& current, Rect const& rect);
 
 pixel_class* get_pixel(Point const& p);
 

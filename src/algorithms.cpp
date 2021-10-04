@@ -16,7 +16,7 @@ constexpr int kNumRequiredButtonHoles = 4;
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
-#define DEBUG_VISUALIZATIONS true
+#define DEBUG_VISUALIZATIONS false
 
 // TODO: comment this function
 void process_image() {
@@ -80,15 +80,14 @@ int count_button_holes(Rect const& button_bounds) {
         }
     }
 
-    // TODO: change this so we accept a std::optional and we know when we've
-    //  dealing with the first point if == std::nullopt
-    std::optional<Point> point = Point{button_bounds.min_x, button_bounds.min_y};
-
-    // TODO: Iterate over circle
+    // TODO: create next_point_in_circle
+    std::optional<Point> point = std::nullopt;
     while ((point = next_point_in_rect(*point, button_bounds))) {
-        auto px = get_pixel(*point);
-
-        const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
+        auto p = get_pixel(*point);
+        if (!p) {
+            continue;
+        }
+        const bool did_discover_new_empty_area = is_not_button_color(*p) && !p->getexclude();
         if (did_discover_new_empty_area) {
             std::optional<std::vector<Point>> visited_points = std::nullopt;
             // TODO: mark_connected_points_as_visited(std::optional<std::vector<Point>> &visited_points);
@@ -103,7 +102,7 @@ int count_button_holes(Rect const& button_bounds) {
             }
         }
 
-        px->setexclude(true);
+        p->setexclude(true);
     }
 
     return num_btn_holes;
@@ -141,9 +140,12 @@ std::vector<Rect> discover_all_button_bounds() {
     std::vector<Rect> bounds_of_buttons;
 
     Rect size_of_picture = Rect{0, screenx, 0, screeny};
-    std::optional<Point> point;
+    std::optional<Point> point = std::nullopt;
     while ((point = next_point_in_rect(*point, size_of_picture))) {
         auto p = get_pixel(*point);
+        if (!p) {
+            continue;
+        }
 
         const bool did_discover_new_button = is_button_color(*p) && !p->getexclude();
         if (did_discover_new_button) {
@@ -160,16 +162,21 @@ std::vector<Rect> discover_all_button_bounds() {
 }
 
 // TODO: comment this function
-std::optional<Point> next_point_in_rect(Point const& current, Rect const& rect) {
+std::optional<Point> next_point_in_rect(std::optional<Point> const& current, Rect const& rect) {
     std::optional<Point> next = current;
-    if (current.x < rect.max_x - 1) {
-        next->x += 1;
+    if (current) {
+        if (current->x < rect.max_x) {
+            next->x += 1;
+        } else {
+            next->x = 0;
+            next->y += 1;
+        }
     } else {
-        next->x = 0;
-        next->y += 1;
+        next->x = rect.min_x;
+        next->y = rect.min_y;
     }
 
-    return (next->y >= rect.max_y) ? std::nullopt : next;
+    return (next->y > rect.max_y) ? std::nullopt : next;
 }
 
 // TODO: comment this function
