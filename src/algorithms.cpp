@@ -70,20 +70,28 @@ int count_button_holes(Rect const& button_bounds) {
     // Iterate over the pixels within the buttons_bounds and flip their exclude
     // status. This is so we can iterate over the bounding box with a "clean slate".
     //
+    // TODO: for next_point_in_circle -> setexclude(false)
+    //  Decide whether standard next_point_in_rect/circle behaviour is inclusive
+    //  or exclusive of boundaries. If different scenarios are necessary, set a flag.
+    //  maybe Rect.expand_by(npx, npx) ?
     for (int y = button_bounds.min_y; y <= button_bounds.max_y; y++) {
         for (int x = button_bounds.min_x; x <= button_bounds.max_x; x++) {
             get_pixel(Point{x, y})->setexclude(false);
         }
     }
 
-    // iterate over image of button
+    // TODO: change this so we accept a std::optional and we know when we've
+    //  dealing with the first point if == std::nullopt
     std::optional<Point> point = Point{button_bounds.min_x, button_bounds.min_y};
+
+    // TODO: Iterate over circle
     while ((point = next_point_in_rect(*point, button_bounds))) {
         auto px = get_pixel(*point);
 
         const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
         if (did_discover_new_empty_area) {
             std::optional<std::vector<Point>> visited_points = std::nullopt;
+            // TODO: mark_connected_points_as_visited(std::optional<std::vector<Point>> &visited_points);
 #if DEBUG_VISUALIZATIONS
             visited_points = std::vector<Point>{};
 #endif
