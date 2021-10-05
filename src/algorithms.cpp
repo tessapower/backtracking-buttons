@@ -70,24 +70,21 @@ int count_button_holes(Rect const& button_bounds) {
     // Iterate over the pixels within the buttons_bounds and flip their exclude
     // status. This is so we can iterate over the bounding box with a "clean slate".
     //
+    // TODO: create next_point_in_circle
     // TODO: for next_point_in_circle -> setexclude(false)
-    //  Decide whether standard next_point_in_rect/circle behaviour is inclusive
-    //  or exclusive of boundaries. If different scenarios are necessary, set a flag.
-    //  maybe Rect.expand_by(npx, npx) ?
-    for (int y = button_bounds.min_y; y <= button_bounds.max_y; y++) {
-        for (int x = button_bounds.min_x; x <= button_bounds.max_x; x++) {
-            get_pixel(Point{x, y})->setexclude(false);
-        }
+    std::optional<Point> p = std::nullopt;
+    while ((p = next_point_in_rect(p, button_bounds))) {
+        get_pixel(*p)->setexclude(false);
     }
 
-    // TODO: create next_point_in_circle
     std::optional<Point> point = std::nullopt;
-    while ((point = next_point_in_rect(*point, button_bounds))) {
-        auto p = get_pixel(*point);
-        if (!p) {
+    while ((point = next_point_in_rect(point, button_bounds))) {
+        auto px = get_pixel(*point);
+        if (!px) {
             continue;
         }
-        const bool did_discover_new_empty_area = is_not_button_color(*p) && !p->getexclude();
+
+        const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
         if (did_discover_new_empty_area) {
             std::optional<std::vector<Point>> visited_points = std::nullopt;
             // TODO: mark_connected_points_as_visited(std::optional<std::vector<Point>> &visited_points);
@@ -102,7 +99,7 @@ int count_button_holes(Rect const& button_bounds) {
             }
         }
 
-        p->setexclude(true);
+        px->setexclude(true);
     }
 
     return num_btn_holes;
@@ -141,7 +138,7 @@ std::vector<Rect> discover_all_button_bounds() {
 
     Rect size_of_picture = Rect{0, screenx, 0, screeny};
     std::optional<Point> point = std::nullopt;
-    while ((point = next_point_in_rect(*point, size_of_picture))) {
+    while ((point = next_point_in_rect(point, size_of_picture))) {
         auto p = get_pixel(*point);
         if (!p) {
             continue;
@@ -162,21 +159,21 @@ std::vector<Rect> discover_all_button_bounds() {
 }
 
 // TODO: comment this function
-std::optional<Point> next_point_in_rect(std::optional<Point> const& current, Rect const& rect) {
-    std::optional<Point> next = current;
-    if (current) {
-        if (current->x < rect.max_x) {
-            next->x += 1;
-        } else {
-            next->x = 0;
-            next->y += 1;
-        }
-    } else {
-        next->x = rect.min_x;
-        next->y = rect.min_y;
+std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const& rect) {
+    if (!point) {
+        // If the point is null, the iteration hasn't started yet and
+        // return the first point in the rect.
+        return Point{rect.min_x, rect.min_y};
     }
 
-    return (next->y > rect.max_y) ? std::nullopt : next;
+    if (point->x < rect.max_x) {
+        point->x++;
+    } else {
+        point->x = rect.min_x;
+        point->y++;
+    }
+
+    return (point->y > rect.max_y) ? std::nullopt : point;
 }
 
 // TODO: comment this function

@@ -1,7 +1,6 @@
 #include <array>
 #include "point.h"
 
-Point::Point(): x{0}, y{0} {}
 Point::Point(int X, int Y): x{X}, y{Y} {}
 
 std::array<Point, 4> Point::neighbors() const {
@@ -13,9 +12,9 @@ std::array<Point, 4> Point::neighbors() const {
     //                   [x  , y+1] (Bottom)
     //
     Point top{x, y - 1};
+    Point right{x + 1, y};
     Point bottom{x, y + 1};
     Point left{x - 1, y};
-    Point right{x + 1, y};
 
     return std::array<Point, 4>{top, right, bottom, left};
 }
