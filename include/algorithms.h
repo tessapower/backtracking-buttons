@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "button.h"
+#include "circle.h"
 #include "color.h"
 #include "pixel_class.h"
 #include "point.h"
@@ -23,6 +24,11 @@ std::vector<Rect> discover_all_button_bounds();
 
 std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const& rect);
 
+std::optional<Point> next_point_in_circle(std::optional<Point> &point, Circle const& circle);
+
+void mark_connected_pixels_as_visited(Point const& point, Circle const& circle,
+                                      std::optional<std::vector<Point>> &visited_points);
+
 pixel_class* get_pixel(Point const& p);
 
 void discover_bounds(Point const& point, Rect& discovered);
@@ -31,11 +37,7 @@ bool is_button_color(pixel_class const& px);
 
 Button assess_button(Rect const& bounds);
 
-int count_button_holes(Rect const& button_bounds);
-
-bool is_touching_bounding_box(Point const& point,
-                              Rect const& button_bounds,
-                              std::optional<std::vector<Point>> &visited_points);
+int count_button_holes_within(Circle const& circle);
 
 bool do_any_match(std::vector<Point> const& points,
                   bool (*predicate_fn)(pixel_class const& p));

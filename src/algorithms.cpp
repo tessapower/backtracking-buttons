@@ -16,7 +16,7 @@ constexpr int kNumRequiredButtonHoles = 4;
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
-#define DEBUG_VISUALIZATIONS false
+#define DEBUG_VISUALIZATIONS true
 
 // TODO: comment this function
 void process_image() {
@@ -54,7 +54,7 @@ Button assess_button(Rect const& bounds) {
 
     is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
     is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
-    is_broken |= count_button_holes(bounds) != kNumRequiredButtonHoles;
+    is_broken |= count_button_holes_within(inner) != kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
     draw_points(inner.points_on_circumference(), Color::LightBlue());
@@ -64,21 +64,19 @@ Button assess_button(Rect const& bounds) {
     return Button{bounds, is_broken};
 }
 
-int count_button_holes(Rect const& button_bounds) {
+int count_button_holes_within(Circle const& circle) {
     int num_btn_holes = 0;
 
-    // Iterate over the pixels within the buttons_bounds and flip their exclude
-    // status. This is so we can iterate over the bounding box with a "clean slate".
+    // Iterate over the pixels within the inner circle and flip their exclude
+    // status. This is so we can iterate over the pixels with a "clean slate".
     //
-    // TODO: create next_point_in_circle
-    // TODO: for next_point_in_circle -> setexclude(false)
     std::optional<Point> p = std::nullopt;
-    while ((p = next_point_in_rect(p, button_bounds))) {
+    while ((p = next_point_in_circle(p, circle))) {
         get_pixel(*p)->setexclude(false);
     }
 
     std::optional<Point> point = std::nullopt;
-    while ((point = next_point_in_rect(point, button_bounds))) {
+    while ((point = next_point_in_circle(point, circle))) {
         auto px = get_pixel(*point);
         if (!px) {
             continue;
@@ -86,17 +84,17 @@ int count_button_holes(Rect const& button_bounds) {
 
         const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
         if (did_discover_new_empty_area) {
+            num_btn_holes += 1;
+
             std::optional<std::vector<Point>> visited_points = std::nullopt;
             // TODO: mark_connected_points_as_visited(std::optional<std::vector<Point>> &visited_points);
 #if DEBUG_VISUALIZATIONS
             visited_points = std::vector<Point>{};
 #endif
-            if (!is_touching_bounding_box(*point, button_bounds, visited_points)) {
-                num_btn_holes += 1;
+            mark_connected_pixels_as_visited(*point, circle, visited_points);
 #if DEBUG_VISUALIZATIONS
-                draw_points(*visited_points, Color::LightBlue());
+            draw_points(*visited_points, Color::LightBlue());
 #endif
-            }
         }
 
         px->setexclude(true);
@@ -105,13 +103,11 @@ int count_button_holes(Rect const& button_bounds) {
     return num_btn_holes;
 }
 
-// TODO: Document this too!
-bool is_touching_bounding_box(Point const& point,
-                              Rect const& button_bounds,
-                              std::optional<std::vector<Point>> &visited_points) {
+void mark_connected_pixels_as_visited(Point const& point, Circle const& circle,
+                                      std::optional<std::vector<Point>> &visited_points) {
     auto pixel = get_pixel(point);
     if (pixel->getexclude() || is_button_color(*pixel)) {
-        return false;
+        return;
     }
 
     // Tracking visited points is optional so points are only appended to the
@@ -121,15 +117,12 @@ bool is_touching_bounding_box(Point const& point,
     }
     pixel->setexclude(true);
 
-    bool is_point_touching = button_bounds.is_point_on_perimeter(point);
     for (auto& p : point.neighbors()) {
-        if (!button_bounds.contains_point(p)) {
+        if (!circle.contains_point(p)) {
             continue;
         }
-        is_point_touching |= is_touching_bounding_box(p, button_bounds, visited_points);
+        mark_connected_pixels_as_visited(p, circle, visited_points);
     }
-
-    return is_point_touching;
 }
 
 // TODO: comment this function
@@ -174,6 +167,16 @@ std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const&
     }
 
     return (point->y > rect.max_y) ? std::nullopt : point;
+}
+
+std::optional<Point> next_point_in_circle(std::optional<Point> &point, Circle const& circle) {
+    while ((point = next_point_in_rect(point, circle.bounding_box()))) {
+        if (point && circle.contains_point(*point)) {
+            break;
+        }
+    }
+
+    return point;
 }
 
 // TODO: comment this function

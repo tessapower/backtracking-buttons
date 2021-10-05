@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "point.h"
+#include "rect.h"
 
 class Circle {
 public:
@@ -12,6 +13,8 @@ public:
     Circle(Point o, int r): origin{o}, radius{r} {};
 
     [[nodiscard]] std::vector<Point> points_on_circumference() const;
+    [[nodiscard]] Rect bounding_box() const;
+    [[nodiscard]] bool contains_point(Point const& p) const;
 };
 
 #endif //CIRCLE_H
