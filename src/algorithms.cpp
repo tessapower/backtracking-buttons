@@ -18,7 +18,6 @@ constexpr int kNumRequiredButtonHoles = 4;
 // This is useful to visualise the process of checking for broken buttons.
 #define DEBUG_VISUALIZATIONS true
 
-// TODO: comment this function
 void process_image() {
     const std::vector<Button> buttons = create_buttons(discover_all_button_bounds());
 
@@ -28,7 +27,6 @@ void process_image() {
     }
 }
 
-// TODO: comment this function
 std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds) {
     std::vector<Button> buttons;
 
@@ -40,8 +38,6 @@ std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds) {
     return buttons;
 }
 
-// TODO: comment this function
-// TODO: probably move this whole thing into create_buttons?
 Button assess_button(Rect const& bounds) {
     bool is_broken = false;
 
@@ -85,7 +81,6 @@ int num_enclosed_button_holes(Circle const& circle) {
         const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
         if (did_discover_new_empty_area) {
             std::optional<std::vector<Point>> visited_points = std::nullopt;
-            // TODO: mark_connected_points_as_visited(std::optional<std::vector<Point>> &visited_points);
 #if DEBUG_VISUALIZATIONS
             visited_points = std::vector<Point>{};
 #endif
@@ -130,37 +125,33 @@ bool is_touching_circumference(Point const& point, Circle const& circle,
     return is_point_touching;
 }
 
-// TODO: comment this function
 std::vector<Rect> discover_all_button_bounds() {
     std::vector<Rect> bounds_of_buttons;
 
     Rect image_rect = Rect{0, screenx, 0, screeny};
-    std::optional<Point> point = std::nullopt;
-    auto iter = RectIterator(image_rect);
-    while ((point = iter.next())) {
-        auto p = get_pixel(*point);
-        if (!p) {
+    for (auto& point : image_rect) {
+        auto px = get_pixel(point);
+        if (!px) {
             continue;
         }
 
-        const bool did_discover_new_button = is_button_color(*p) && !p->getexclude();
+        const bool did_discover_new_button = is_button_color(*px) && !px->getexclude();
         if (did_discover_new_button) {
             // Initialize our bounds to a 0-by-0 box which discover_bounds expands
-            Rect button_bounds(point->x, point->x, point->y, point->y);
-            discover_bounds(*point, button_bounds);
+            Rect button_bounds(point.x, point.x, point.y, point.y);
+            discover_bounds(point, button_bounds);
             bounds_of_buttons.emplace_back(button_bounds);
         }
 
-        p->setexclude(true);
+        px->setexclude(true);
     }
 
     return bounds_of_buttons;
 }
 
-// TODO: comment this function
 std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const& rect) {
     if (!point) {
-        // If the point is null, the iteration hasn't started yet and
+        // If the point is null, the iteration hasn't started yet, so
         // return the first point in the rect.
         return Point{rect.min_x, rect.min_y};
     }
@@ -178,21 +169,19 @@ std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const&
 std::optional<Point> next_point_in_circle(std::optional<Point> &point, Circle const& circle) {
     while ((point = next_point_in_rect(point, circle.bounding_box()))) {
         if (point && circle.contains_point(*point)) {
-            break;
+            return point;
         }
     }
 
-    return point;
+    return std::nullopt;
 }
 
-// TODO: comment this function
 pixel_class* get_pixel(Point const& p) {
     return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
            ? &picture[p.y][p.x]
            : nullptr;
 }
 
-// TODO: comment this function
 // find the boundary of a discovered button by finding all connected pixels
 void discover_bounds(Point const& point, Rect& discovered) {
     // base case
@@ -211,13 +200,11 @@ void discover_bounds(Point const& point, Rect& discovered) {
     }
 }
 
-// TODO: comment this function
 // returns if the pixel is the color of a button
 bool is_button_color(pixel_class const& px) {
     return px.getR() > 128;
 }
 
-// TODO: comment this function
 bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_class const& p)) {
     for (auto& point : points) {
         auto p = get_pixel(point);
@@ -231,12 +218,10 @@ bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_c
     return false;
 }
 
-// TODO: comment this function
 bool is_not_button_color(pixel_class const& px) {
     return !is_button_color(px);
 }
 
-// TODO: comment this function
 void draw_points(std::vector<Point> const& points, Color const& color) {
     for (auto& p : points) {
         auto px = get_pixel(p);
