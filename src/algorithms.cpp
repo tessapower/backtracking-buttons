@@ -134,9 +134,10 @@ bool is_touching_circumference(Point const& point, Circle const& circle,
 std::vector<Rect> discover_all_button_bounds() {
     std::vector<Rect> bounds_of_buttons;
 
-    Rect size_of_picture = Rect{0, screenx, 0, screeny};
+    Rect image_rect = Rect{0, screenx, 0, screeny};
     std::optional<Point> point = std::nullopt;
-    while ((point = next_point_in_rect(point, size_of_picture))) {
+    auto iter = RectIterator(image_rect);
+    while ((point = iter.next())) {
         auto p = get_pixel(*point);
         if (!p) {
             continue;

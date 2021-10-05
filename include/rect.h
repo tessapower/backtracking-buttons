@@ -2,8 +2,11 @@
 #define RECT_H
 
 #include <vector>
+#include <optional>
 
 #include "point.h"
+
+class RectIterator;
 
 class Rect {
 public:
@@ -12,6 +15,7 @@ public:
     int min_y;
     int max_y;
 
+    Rect(const Rect&) = default;
     Rect()
         : min_x{0}, max_x{0}, min_y{0}, max_y{0} {}
     Rect(int min_x, int max_x, int min_y, int max_y)
@@ -24,6 +28,16 @@ public:
     [[nodiscard]] std::vector<Point> points_on_perimeter() const;
     [[nodiscard]] bool is_point_on_perimeter(Point const& p) const;
     [[nodiscard]] bool contains_point(Point const& p) const;
+    [[nodiscard]] RectIterator iterator() const;
+};
+
+class RectIterator {
+public:
+    [[nodiscard]] std::optional<Point> next();
+    explicit RectIterator(Rect rect): rect{rect} {}
+private:
+    std::optional<Point> last = std::nullopt;
+    Rect rect;
 };
 
 #endif //RECT_H

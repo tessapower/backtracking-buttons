@@ -38,3 +38,25 @@ bool Rect::is_point_on_perimeter(Point const& p) const {
 bool Rect::contains_point(Point const& p) const {
     return p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y;
 }
+
+RectIterator Rect::iterator() const {
+    return RectIterator{Rect{*this}};
+}
+
+std::optional<Point> RectIterator::next() {
+    if (!last) {
+        // If the point is null, the iteration hasn't started yet and
+        // return the first point in the rect.
+        last = Point{rect.min_x, rect.min_y};
+    } else {
+        if (last->x < rect.max_x) {
+            last->x++;
+        } else {
+            last->x = rect.min_x;
+            last->y++;
+        }
+    }
+
+
+    return (last->y > rect.max_y) ? std::nullopt : last;
+}
