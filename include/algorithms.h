@@ -26,8 +26,8 @@ std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const&
 
 std::optional<Point> next_point_in_circle(std::optional<Point> &point, Circle const& circle);
 
-void mark_connected_pixels_as_visited(Point const& point, Circle const& circle,
-                                      std::optional<std::vector<Point>> &visited_points);
+bool is_touching_circumference(Point const& point, Circle const& circle,
+                               std::optional<std::vector<Point>> &visited_points);
 
 pixel_class* get_pixel(Point const& p);
 
@@ -37,7 +37,7 @@ bool is_button_color(pixel_class const& px);
 
 Button assess_button(Rect const& bounds);
 
-int count_button_holes_within(Circle const& circle);
+int num_enclosed_button_holes(Circle const& circle);
 
 bool do_any_match(std::vector<Point> const& points,
                   bool (*predicate_fn)(pixel_class const& p));

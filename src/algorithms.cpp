@@ -54,7 +54,7 @@ Button assess_button(Rect const& bounds) {
 
     is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
     is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
-    is_broken |= count_button_holes_within(inner) != kNumRequiredButtonHoles;
+    is_broken |= num_enclosed_button_holes(inner) != kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
     draw_points(inner.points_on_circumference(), Color::LightBlue());
@@ -64,7 +64,7 @@ Button assess_button(Rect const& bounds) {
     return Button{bounds, is_broken};
 }
 
-int count_button_holes_within(Circle const& circle) {
+int num_enclosed_button_holes(Circle const& circle) {
     int num_btn_holes = 0;
 
     // Iterate over the pixels within the inner circle and flip their exclude
@@ -84,17 +84,17 @@ int count_button_holes_within(Circle const& circle) {
 
         const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
         if (did_discover_new_empty_area) {
-            num_btn_holes += 1;
-
             std::optional<std::vector<Point>> visited_points = std::nullopt;
             // TODO: mark_connected_points_as_visited(std::optional<std::vector<Point>> &visited_points);
 #if DEBUG_VISUALIZATIONS
             visited_points = std::vector<Point>{};
 #endif
-            mark_connected_pixels_as_visited(*point, circle, visited_points);
+            if (!is_touching_circumference(*point, circle, visited_points)) {
+                num_btn_holes += 1;
 #if DEBUG_VISUALIZATIONS
-            draw_points(*visited_points, Color::LightBlue());
+                draw_points(*visited_points, Color::LightBlue());
 #endif
+            }
         }
 
         px->setexclude(true);
@@ -103,11 +103,11 @@ int count_button_holes_within(Circle const& circle) {
     return num_btn_holes;
 }
 
-void mark_connected_pixels_as_visited(Point const& point, Circle const& circle,
-                                      std::optional<std::vector<Point>> &visited_points) {
+bool is_touching_circumference(Point const& point, Circle const& circle,
+                               std::optional<std::vector<Point>> &visited_points) {
     auto pixel = get_pixel(point);
     if (pixel->getexclude() || is_button_color(*pixel)) {
-        return;
+        return false;
     }
 
     // Tracking visited points is optional so points are only appended to the
@@ -117,12 +117,17 @@ void mark_connected_pixels_as_visited(Point const& point, Circle const& circle,
     }
     pixel->setexclude(true);
 
+    bool is_point_touching = circle.is_point_on_circumference(point);
     for (auto& p : point.neighbors()) {
         if (!circle.contains_point(p)) {
             continue;
         }
-        mark_connected_pixels_as_visited(p, circle, visited_points);
+
+        is_point_touching |= is_touching_circumference(p, circle,
+                                                       visited_points);
     }
+
+    return is_point_touching;
 }
 
 // TODO: comment this function
