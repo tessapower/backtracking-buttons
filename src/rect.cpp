@@ -39,24 +39,27 @@ bool Rect::contains_point(Point const& p) const {
     return p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y;
 }
 
-RectIterator Rect::iterator() const {
-    return RectIterator{Rect{*this}};
+
+RectIterator Rect::begin() const {
+    return RectIterator{*this};
 }
 
-std::optional<Point> RectIterator::next() {
-    if (!last) {
-        // If the point is null, the iteration hasn't started yet and
-        // return the first point in the rect.
-        last = Point{rect.min_x, rect.min_y};
+
+RectIterator Rect::end() const {
+    return RectIterator{*this, Point{min_x, max_y+1}};
+}
+
+RectIterator RectIterator::operator++() {
+    if (current.x < rect.max_x) {
+        current.x++;
     } else {
-        if (last->x < rect.max_x) {
-            last->x++;
-        } else {
-            last->x = rect.min_x;
-            last->y++;
-        }
+        current.x = rect.min_x;
+        current.y++;
     }
 
+    return *this;
+}
 
-    return (last->y > rect.max_y) ? std::nullopt : last;
+bool operator!=(RectIterator const& lhs, RectIterator const& rhs) {
+    return lhs.current != rhs.current;
 }

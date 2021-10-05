@@ -14,6 +14,8 @@ public:
     int max_x;
     int min_y;
     int max_y;
+    [[nodiscard]] RectIterator begin() const;
+    [[nodiscard]] RectIterator end() const;
 
     Rect(const Rect&) = default;
     Rect()
@@ -28,16 +30,22 @@ public:
     [[nodiscard]] std::vector<Point> points_on_perimeter() const;
     [[nodiscard]] bool is_point_on_perimeter(Point const& p) const;
     [[nodiscard]] bool contains_point(Point const& p) const;
-    [[nodiscard]] RectIterator iterator() const;
 };
 
 class RectIterator {
 public:
-    [[nodiscard]] std::optional<Point> next();
-    explicit RectIterator(Rect rect): rect{rect} {}
+    RectIterator(Rect const& rect, Point starting_point): rect{rect}, current{starting_point} {};
+
+    [[nodiscard]] Point const& operator*() const { return current; };
+    RectIterator operator++();
+    friend bool operator!=(RectIterator const& lhs, RectIterator const& rhs);
+    friend Rect;
+
 private:
-    std::optional<Point> last = std::nullopt;
+    explicit RectIterator(Rect const& rect): rect{rect} {};
+
     Rect rect;
+    Point current = Point{rect.min_x, rect.min_y};
 };
 
 #endif //RECT_H
