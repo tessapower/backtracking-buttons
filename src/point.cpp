@@ -18,3 +18,11 @@ std::array<Point, 4> Point::neighbors() const {
 
     return std::array<Point, 4>{top, right, bottom, left};
 }
+
+bool operator==(const Point& lhs, const Point& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
+bool operator!=(const Point& lhs, const Point& rhs) {
+    return !(lhs == rhs);
+}

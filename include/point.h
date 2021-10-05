@@ -18,6 +18,8 @@ public:
      *   points as cartesian coordinates in that order.
      */
     [[nodiscard]] std::array<Point, 4> neighbors() const;
+    friend bool operator==(const Point& lhs, const Point& rhs);
+    friend bool operator!=(const Point& lhs, const Point& rhs);
 };
 
 #endif //POINT_H
