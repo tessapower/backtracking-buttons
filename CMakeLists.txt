@@ -16,7 +16,6 @@ set(SOURCES
 
 set(HEADERS
         include/algorithms.h
-        include/button.h
         include/circle.h
         include/color.h
         include/point.h

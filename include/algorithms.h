@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "button.h"
 #include "circle.h"
 #include "color.h"
 #include "pixel_class.h"
@@ -17,8 +16,6 @@
 // TODO: comment functions
 
 void process_image();
-
-std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds);
 
 std::vector<Rect> discover_all_button_bounds();
 

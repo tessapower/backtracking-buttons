@@ -1,6 +1,5 @@
 #include <cmath>
 
-#include "button.h"
 #include "algorithms.h"
 #include "circle.h"
 #include "color.h"
@@ -19,19 +18,7 @@ constexpr int kNumRequiredButtonHoles = 4;
 #define DEBUG_VISUALIZATIONS false
 
 void process_image() {
-    const std::vector<Button> buttons = create_buttons(discover_all_button_bounds());
-
-    for (auto const& b : buttons) {
-        Color status_color = b.is_broken ? Color::Red() : Color::Green();
-        draw_points(b.bounds.points_on_perimeter(), status_color);
-    }
-}
-
-std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds) {
-    std::vector<Button> buttons;
-    buttons.reserve(button_bounds.size());
-
-    for (auto const& bounds : button_bounds) {
+    for (auto const& bounds : discover_all_button_bounds()) {
         bool is_broken = false;
 
         // Draw two concentric circles and require that the pixellated edge of the
@@ -52,10 +39,10 @@ std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds) {
         draw_points(inner.points_on_circumference(), Color::LightBlue());
         draw_points(outer.points_on_circumference(), Color::LightBlue());
 #endif
-        buttons.emplace_back(Button{bounds, is_broken});
-    }
 
-    return buttons;
+        Color status_color = is_broken ? Color::Red() : Color::Green();
+        draw_points(bounds.points_on_perimeter(), status_color);
+    }
 }
 
 int num_enclosed_button_holes(Rect const& bounds) {
