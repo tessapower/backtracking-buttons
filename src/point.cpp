@@ -1,8 +1,6 @@
 #include <array>
 #include "point.h"
 
-Point::Point(int X, int Y): x{X}, y{Y} {}
-
 std::array<Point, 4> Point::neighbors() const {
     // We base the neighboring points on the graphics Cartesian Coordinate system
     // with the origin starting in the top left corner [0, 0].

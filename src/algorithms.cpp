@@ -16,78 +16,82 @@ constexpr int kNumRequiredButtonHoles = 4;
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
-#define DEBUG_VISUALIZATIONS true
+#define DEBUG_VISUALIZATIONS false
 
 void process_image() {
     const std::vector<Button> buttons = create_buttons(discover_all_button_bounds());
 
-    for (auto const& button : buttons) {
-        draw_points(button.bounds.points_on_perimeter(),
-                    button.is_broken ? Color::Red() : Color::Green());
+    for (auto const& b : buttons) {
+        Color status_color = b.is_broken ? Color::Red() : Color::Green();
+        draw_points(b.bounds.points_on_perimeter(), status_color);
     }
 }
 
 std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds) {
     std::vector<Button> buttons;
-
     buttons.reserve(button_bounds.size());
-    for (auto& b : button_bounds) {
-        buttons.emplace_back(assess_button(b));
+
+    for (auto const& bounds : button_bounds) {
+        bool is_broken = false;
+
+        // Draw two concentric circles and require that the pixellated edge of the
+        // button image falls between them.
+        const int radius = static_cast<int>(std::max(bounds.width(), bounds.height()) / 2.0);
+        const int inner_radius = static_cast<int>(radius * 0.9);
+        const int outer_radius = static_cast<int>(radius * 1.2);
+
+        const Circle inner{bounds.center(), inner_radius};
+        const Circle outer{bounds.center(), outer_radius};
+
+        // TODO: replace with unary predicate
+        is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
+        is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
+        is_broken |= num_enclosed_button_holes(inner.bounding_box()) != kNumRequiredButtonHoles;
+
+#if DEBUG_VISUALIZATIONS
+        draw_points(inner.points_on_circumference(), Color::LightBlue());
+        draw_points(outer.points_on_circumference(), Color::LightBlue());
+#endif
+        buttons.emplace_back(Button{bounds, is_broken});
     }
 
     return buttons;
 }
 
-Button assess_button(Rect const& bounds) {
-    bool is_broken = false;
-
-    const int radius = static_cast<int>(std::max(bounds.width(), bounds.height()) / 2.0);
-    const int inner_radius = static_cast<int>(radius * 0.9);
-    const int outer_radius = static_cast<int>(radius * 1.2);
-
-    const Circle inner{bounds.center(), inner_radius};
-    const Circle outer{bounds.center(), outer_radius};
-
-    is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
-    is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
-    is_broken |= num_enclosed_button_holes(inner) != kNumRequiredButtonHoles;
-
-#if DEBUG_VISUALIZATIONS
-    draw_points(inner.points_on_circumference(), Color::LightBlue());
-    draw_points(outer.points_on_circumference(), Color::LightBlue());
-#endif
-
-    return Button{bounds, is_broken};
-}
-
-int num_enclosed_button_holes(Circle const& circle) {
+int num_enclosed_button_holes(Rect const& bounds) {
     int num_btn_holes = 0;
 
-    // Iterate over the pixels within the inner circle and flip their exclude
-    // status. This is so we can iterate over the pixels with a "clean slate".
+    // Iterate over the pixels within the bounding box of the button and flip
+    // their exclude  status. Then the pixels are in a "clean" slate.
     //
-    std::optional<Point> p = std::nullopt;
-    while ((p = next_point_in_circle(p, circle))) {
-        get_pixel(*p)->setexclude(false);
+    for (auto const& point : bounds) {
+        get_pixel(point)->setexclude(false);
     }
 
-    std::optional<Point> point = std::nullopt;
-    while ((point = next_point_in_circle(point, circle))) {
-        auto px = get_pixel(*point);
+    for (auto const& point : bounds) {
+        auto px = get_pixel(point);
         if (!px) {
             continue;
         }
 
         const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
         if (did_discover_new_empty_area) {
-            std::optional<std::vector<Point>> visited_points = std::nullopt;
+            std::optional<std::vector<Point>> visited = std::nullopt;
+
 #if DEBUG_VISUALIZATIONS
-            visited_points = std::vector<Point>{};
+            visited = std::vector<Point>{};
 #endif
-            if (!is_touching_circumference(*point, circle, visited_points)) {
+
+            // If the connected pixels touch the bounds, then the empty area
+            // discovered isn't a fully enclosed button hole
+            //
+            bool does_touch_bounds = discover_extent_of_connected_points(
+                    point, bounds, visited);
+
+            if (!does_touch_bounds) {
                 num_btn_holes += 1;
 #if DEBUG_VISUALIZATIONS
-                draw_points(*visited_points, Color::LightBlue());
+                draw_points(*visited, Color::LightBlue());
 #endif
             }
         }
@@ -98,38 +102,39 @@ int num_enclosed_button_holes(Circle const& circle) {
     return num_btn_holes;
 }
 
-bool is_touching_circumference(Point const& point, Circle const& circle,
-                               std::optional<std::vector<Point>> &visited_points) {
-    auto pixel = get_pixel(point);
-    if (pixel->getexclude() || is_button_color(*pixel)) {
+// The visited parameter is optional; if you provide it, it will be filled with
+// all points discovered while searching for the extent of connected points.
+bool discover_extent_of_connected_points(Point const& point, Rect const& bounds,
+                                         std::optional<std::vector<Point>> &visited) {
+    auto px = get_pixel(point);
+    if (px->getexclude() || is_button_color(*px)) {
         return false;
     }
 
     // Tracking visited points is optional so points are only appended to the
     // vector if a vector is provided.
-    if (visited_points) {
-        visited_points->emplace_back(point);
+    if (visited) {
+        visited->emplace_back(point);
     }
-    pixel->setexclude(true);
+    px->setexclude(true);
 
-    bool is_point_touching = circle.is_point_on_circumference(point);
-    for (auto& p : point.neighbors()) {
-        if (!circle.contains_point(p)) {
+    bool does_touch_bounds = bounds.is_point_on_perimeter(point);
+    for (auto const& p : point.neighbors()) {
+        if (!bounds.contains_point(p)) {
             continue;
         }
 
-        is_point_touching |= is_touching_circumference(p, circle,
-                                                       visited_points);
+        does_touch_bounds |= discover_extent_of_connected_points(p, bounds,visited);
     }
 
-    return is_point_touching;
+    return does_touch_bounds;
 }
 
 std::vector<Rect> discover_all_button_bounds() {
     std::vector<Rect> bounds_of_buttons;
 
     Rect image_rect = Rect{0, screenx, 0, screeny};
-    for (auto& point : image_rect) {
+    for (auto const& point : image_rect) {
         auto px = get_pixel(point);
         if (!px) {
             continue;
@@ -149,67 +154,40 @@ std::vector<Rect> discover_all_button_bounds() {
     return bounds_of_buttons;
 }
 
-std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const& rect) {
-    if (!point) {
-        // If the point is null, the iteration hasn't started yet, so
-        // return the first point in the rect.
-        return Point{rect.min_x, rect.min_y};
-    }
-
-    if (point->x < rect.max_x) {
-        point->x++;
-    } else {
-        point->x = rect.min_x;
-        point->y++;
-    }
-
-    return (point->y > rect.max_y) ? std::nullopt : point;
-}
-
-std::optional<Point> next_point_in_circle(std::optional<Point> &point, Circle const& circle) {
-    while ((point = next_point_in_rect(point, circle.bounding_box()))) {
-        if (point && circle.contains_point(*point)) {
-            return point;
-        }
-    }
-
-    return std::nullopt;
-}
-
 pixel_class* get_pixel(Point const& p) {
     return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
            ? &picture[p.y][p.x]
            : nullptr;
 }
 
-// find the boundary of a discovered button by finding all connected pixels
 void discover_bounds(Point const& point, Rect& discovered) {
-    // base case
     auto px = get_pixel(point);
     if ((px == nullptr) || px->getexclude() || is_not_button_color(*px)) {
         return;
     }
 
-    // do the thing
     px->setexclude(true);
     discovered.expand_to_include(point);
 
-    // recurse
-    for (auto& p : point.neighbors()) {
+    for (auto const& p : point.neighbors()) {
         discover_bounds(p, discovered);
     }
 }
 
-// returns if the pixel is the color of a button
 bool is_button_color(pixel_class const& px) {
     return px.getR() > 128;
 }
 
+bool is_not_button_color(pixel_class const& px) {
+    return !is_button_color(px);
+}
+
+// FIXME: How do STL unary predicate functions/lambdas work?
 bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_class const& p)) {
-    for (auto& point : points) {
-        auto p = get_pixel(point);
-        if (p != nullptr) {
-            if (predicate_fn(*p)) {
+    for (auto const& p : points) {
+        auto px = get_pixel(p);
+        if (px != nullptr) {
+            if (predicate_fn(*px)) {
                 return true;
             }
         }
@@ -218,12 +196,8 @@ bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_c
     return false;
 }
 
-bool is_not_button_color(pixel_class const& px) {
-    return !is_button_color(px);
-}
-
 void draw_points(std::vector<Point> const& points, Color const& color) {
-    for (auto& p : points) {
+    for (auto const& p : points) {
         auto px = get_pixel(p);
         if (px != nullptr) {
             px->loaddata(color.R, color.G, color.B);

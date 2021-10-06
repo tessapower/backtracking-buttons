@@ -22,12 +22,8 @@ std::vector<Button> create_buttons(std::vector<Rect> const& button_bounds);
 
 std::vector<Rect> discover_all_button_bounds();
 
-std::optional<Point> next_point_in_rect(std::optional<Point> &point, Rect const& rect);
-
-std::optional<Point> next_point_in_circle(std::optional<Point> &point, Circle const& circle);
-
-bool is_touching_circumference(Point const& point, Circle const& circle,
-                               std::optional<std::vector<Point>> &visited_points);
+bool discover_extent_of_connected_points(Point const& point, Rect const& bounds,
+                                         std::optional<std::vector<Point>> &visited);
 
 pixel_class* get_pixel(Point const& p);
 
@@ -35,14 +31,12 @@ void discover_bounds(Point const& point, Rect& discovered);
 
 bool is_button_color(pixel_class const& px);
 
-Button assess_button(Rect const& bounds);
+bool is_not_button_color(pixel_class const& px);
 
-int num_enclosed_button_holes(Circle const& circle);
+int num_enclosed_button_holes(Rect const& bounds);
 
 bool do_any_match(std::vector<Point> const& points,
                   bool (*predicate_fn)(pixel_class const& p));
-
-bool is_not_button_color(pixel_class const& px);
 
 void draw_points(std::vector<Point> const& points, Color const& color);
 

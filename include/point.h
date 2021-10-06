@@ -8,11 +8,14 @@
  */
 class Point {
 public:
+    /* ========================================================== Constructor */
+    Point(int X, int Y): x{X}, y{Y} {};
+
+    /* ===================================================== Member Variables */
     int x;
     int y;
 
-    Point(int x, int y);
-
+    /* ======================================================== Class Methods */
     /**
      * @return Array containing the neighboring top, right, bottom, and left
      *   points as cartesian coordinates in that order.

@@ -7,7 +7,6 @@ include_directories(include)
 set(SOURCES
         src/algorithms.cpp
         src/circle.cpp
-        src/color.cpp
         src/point.cpp
         src/io.cpp
         src/pixel_class.cpp
