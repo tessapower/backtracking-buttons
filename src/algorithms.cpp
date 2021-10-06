@@ -16,7 +16,7 @@ constexpr int kNumRequiredButtonHoles = 4;
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
-#define DEBUG_VISUALIZATIONS false
+#define DEBUG_VISUALIZATIONS true
 
 void process_image() {
     for (auto const& bounds : discover_all_button_bounds()) {
@@ -43,6 +43,7 @@ void process_image() {
                 inner_circumference.end(),
                 is_part_of_button);
         is_broken |= num_enclosed_button_holes(inner.bounding_box()) != kNumRequiredButtonHoles;
+
 
 #if DEBUG_VISUALIZATIONS
         draw_points(outer_circumference, Color::LightBlue());
@@ -72,22 +73,27 @@ int num_enclosed_button_holes(Rect const& bounds) {
 
         const bool did_discover_new_empty_area = !is_part_of_button(point) && !px->getexclude();
         if (did_discover_new_empty_area) {
-            std::optional<std::vector<Point>> visited = std::nullopt;
+            std::optional<MaybePointVector> discovered_points = std::nullopt;
 
 #if DEBUG_VISUALIZATIONS
-            visited = std::vector<Point>{};
+            std::vector<Point> my_vec{};
+            discovered_points = my_vec;
 #endif
+
+            Rect discovered_extent = Rect{point};
+            discover_extent_of_connected_points(
+                    point,
+                    discovered_extent,
+                    [](Point const& p) {return !is_part_of_button(p);},
+                    discovered_points);
 
             // If the connected pixels touch the bounds, then the empty area
             // discovered isn't a fully enclosed button hole
-            //
-            bool does_touch_bounds = discover_extent_of_connected_points(
-                    point, bounds, visited);
-
-            if (!does_touch_bounds) {
+            if (discovered_extent.is_proper_subset_of(bounds)) {
                 num_btn_holes += 1;
 #if DEBUG_VISUALIZATIONS
-                draw_points(*visited, Color::LightBlue());
+                // TODO: Draw single point for each point in discovered_points
+                draw_points(*discovered_points, Color::LightBlue());
 #endif
             }
         }
@@ -98,32 +104,32 @@ int num_enclosed_button_holes(Rect const& bounds) {
     return num_btn_holes;
 }
 
-// The visited parameter is optional; if you provide it, it will be filled with
-// all points discovered while searching for the extent of connected points.
-bool discover_extent_of_connected_points(Point const& point, Rect const& bounds,
-                                         std::optional<std::vector<Point>> &visited) {
+// The discovered_points parameter is optional; if provided, it will be filled
+// with all points discovered while searching for the extent of connected points
+void discover_extent_of_connected_points(Point const& point,
+                                         Rect &discovered_extent,
+                                         PointPredicate const& pred_fn,
+                                         std::optional<MaybePointVector> discovered_points) {
     auto px = get_pixel(point);
-    if (px->getexclude() || is_part_of_button(point)) {
-        return false;
+    if (px->getexclude() || !pred_fn(point)) {
+        return;
     }
 
-    // Tracking visited points is optional so points are only appended to the
-    // vector if a vector is provided.
-    if (visited) {
-        visited->emplace_back(point);
+    // Tracking discovered points is optional so points are only appended to the
+    // vector if a vector is provided
+    if (discovered_points) {
+        discovered_points->get().emplace_back(point);
     }
+
     px->setexclude(true);
+    discovered_extent.expand_to_include(point);
 
-    bool does_touch_bounds = bounds.is_point_on_perimeter(point);
     for (auto const& p : point.neighbors()) {
-        if (!bounds.contains_point(p)) {
-            continue;
-        }
-
-        does_touch_bounds |= discover_extent_of_connected_points(p, bounds,visited);
+        discover_extent_of_connected_points(p,
+                                            discovered_extent,
+                                            pred_fn,
+                                            discovered_points);
     }
-
-    return does_touch_bounds;
 }
 
 std::vector<Rect> discover_all_button_bounds() {
@@ -139,9 +145,13 @@ std::vector<Rect> discover_all_button_bounds() {
         const bool did_discover_new_button = is_part_of_button(point) && !px->getexclude();
         if (did_discover_new_button) {
             // Initialize our bounds to a 0-by-0 box which discover_bounds expands
-            Rect button_bounds(point.x, point.x, point.y, point.y);
-            discover_bounds(point, button_bounds);
-            bounds_of_buttons.emplace_back(button_bounds);
+            Rect discovered_extent(point);
+            discover_extent_of_connected_points(
+                    point,
+                    discovered_extent,
+                    [](Point const& point){ return is_part_of_button(point);});
+
+            bounds_of_buttons.emplace_back(discovered_extent);
         }
 
         px->setexclude(true);
@@ -154,20 +164,6 @@ pixel_class* get_pixel(Point const& p) {
     return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
            ? &picture[p.y][p.x]
            : nullptr;
-}
-
-void discover_bounds(Point const& point, Rect& discovered) {
-    auto px = get_pixel(point);
-    if ((px == nullptr) || px->getexclude() || !is_part_of_button(point)) {
-        return;
-    }
-
-    px->setexclude(true);
-    discovered.expand_to_include(point);
-
-    for (auto const& p : point.neighbors()) {
-        discover_bounds(p, discovered);
-    }
 }
 
 bool is_part_of_button(Point const& point) {

@@ -13,6 +13,7 @@ public:
     /* ========================================================= Constructors */
     Rect(const Rect&) = default;
     Rect(): min_x{0}, max_x{0}, min_y{0}, max_y{0} {};
+    explicit Rect(Point p): min_x{p.x}, max_x{p.x}, min_y{p.y}, max_y{p.y} {};
     Rect(int min_x, int max_x, int min_y, int max_y)
             : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
@@ -35,6 +36,7 @@ public:
     [[nodiscard]] std::vector<Point> points_on_perimeter() const;
     [[nodiscard]] bool is_point_on_perimeter(Point const& p) const;
     [[nodiscard]] bool contains_point(Point const& p) const;
+    [[nodiscard]] bool is_proper_subset_of(Rect const& bounds) const;
 };
 
 class RectIterator {

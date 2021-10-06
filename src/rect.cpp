@@ -47,6 +47,16 @@ bool Rect::is_point_on_perimeter(Point const& p) const {
     return p.x == min_x || p.x == max_x || p.y == min_y || p.y == max_y;
 }
 
+bool Rect::is_proper_subset_of(Rect const& bounds) const {
+    for (auto const& point : *this) {
+        if (!bounds.contains_point(point) || bounds.is_point_on_perimeter(point)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 RectIterator RectIterator::operator++() {
     if (current.x < rect.max_x) {
         current.x++;
