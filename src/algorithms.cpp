@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cmath>
 
 #include "algorithms.h"
@@ -30,14 +31,22 @@ void process_image() {
         const Circle inner{bounds.center(), inner_radius};
         const Circle outer{bounds.center(), outer_radius};
 
-        // TODO: replace with unary predicate
-        is_broken |= do_any_match(inner.points_on_circumference(), &is_not_button_color);
-        is_broken |= do_any_match(outer.points_on_circumference(), &is_button_color);
+        const auto outer_circumference = outer.points_on_circumference();
+        const auto inner_circumference = inner.points_on_circumference();
+
+        is_broken |= std::any_of(
+                outer_circumference.begin(),
+                outer_circumference.end(),
+                is_part_of_button);
+        is_broken |= !std::all_of(
+                inner_circumference.begin(),
+                inner_circumference.end(),
+                is_part_of_button);
         is_broken |= num_enclosed_button_holes(inner.bounding_box()) != kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
-        draw_points(inner.points_on_circumference(), Color::LightBlue());
-        draw_points(outer.points_on_circumference(), Color::LightBlue());
+        draw_points(outer_circumference, Color::LightBlue());
+        draw_points(inner_circumference, Color::LightBlue());
 #endif
 
         Color status_color = is_broken ? Color::Red() : Color::Green();
@@ -61,7 +70,7 @@ int num_enclosed_button_holes(Rect const& bounds) {
             continue;
         }
 
-        const bool did_discover_new_empty_area = is_not_button_color(*px) && !px->getexclude();
+        const bool did_discover_new_empty_area = !is_part_of_button(point) && !px->getexclude();
         if (did_discover_new_empty_area) {
             std::optional<std::vector<Point>> visited = std::nullopt;
 
@@ -94,7 +103,7 @@ int num_enclosed_button_holes(Rect const& bounds) {
 bool discover_extent_of_connected_points(Point const& point, Rect const& bounds,
                                          std::optional<std::vector<Point>> &visited) {
     auto px = get_pixel(point);
-    if (px->getexclude() || is_button_color(*px)) {
+    if (px->getexclude() || is_part_of_button(point)) {
         return false;
     }
 
@@ -127,7 +136,7 @@ std::vector<Rect> discover_all_button_bounds() {
             continue;
         }
 
-        const bool did_discover_new_button = is_button_color(*px) && !px->getexclude();
+        const bool did_discover_new_button = is_part_of_button(point) && !px->getexclude();
         if (did_discover_new_button) {
             // Initialize our bounds to a 0-by-0 box which discover_bounds expands
             Rect button_bounds(point.x, point.x, point.y, point.y);
@@ -149,7 +158,7 @@ pixel_class* get_pixel(Point const& p) {
 
 void discover_bounds(Point const& point, Rect& discovered) {
     auto px = get_pixel(point);
-    if ((px == nullptr) || px->getexclude() || is_not_button_color(*px)) {
+    if ((px == nullptr) || px->getexclude() || !is_part_of_button(point)) {
         return;
     }
 
@@ -161,23 +170,10 @@ void discover_bounds(Point const& point, Rect& discovered) {
     }
 }
 
-bool is_button_color(pixel_class const& px) {
-    return px.getR() > 128;
-}
-
-bool is_not_button_color(pixel_class const& px) {
-    return !is_button_color(px);
-}
-
-// FIXME: How do STL unary predicate functions/lambdas work?
-bool do_any_match(std::vector<Point> const& points, bool (*predicate_fn)(pixel_class const& p)) {
-    for (auto const& p : points) {
-        auto px = get_pixel(p);
-        if (px != nullptr) {
-            if (predicate_fn(*px)) {
-                return true;
-            }
-        }
+bool is_part_of_button(Point const& point) {
+    auto px = get_pixel(point);
+    if (px != nullptr) {
+        return px->getR() > 128;
     }
 
     return false;

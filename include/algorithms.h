@@ -26,14 +26,9 @@ pixel_class* get_pixel(Point const& p);
 
 void discover_bounds(Point const& point, Rect& discovered);
 
-bool is_button_color(pixel_class const& px);
-
-bool is_not_button_color(pixel_class const& px);
+bool is_part_of_button(Point const& point);
 
 int num_enclosed_button_holes(Rect const& bounds);
-
-bool do_any_match(std::vector<Point> const& points,
-                  bool (*predicate_fn)(pixel_class const& p));
 
 void draw_points(std::vector<Point> const& points, Color const& color);
 
