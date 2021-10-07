@@ -37,14 +37,14 @@ void discover_extent_of_connected_points(
         Point const& point,
         Rect &discovered_extent,
         PointPredicate const& pred_fn,
-        std::optional<MaybePointVector> discovered_points = std::nullopt);
+        OptionalPointVecRef discovered_points = std::nullopt);
 
-pixel_class* get_pixel(Point const& p);
+int num_button_holes(Rect const& bounds);
 
 bool is_part_of_button(Point const& point);
 
-int num_enclosed_button_holes(Rect const& bounds);
-
 void draw_points(std::vector<Point> const& points, Color const& color);
+
+pixel_class* get_pixel(Point const& p);
 
 #endif //ALGORITHMS_H
