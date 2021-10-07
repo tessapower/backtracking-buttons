@@ -11,8 +11,8 @@ public:
     Circle(Point o, int r): origin{o}, radius{r} {};
 
     /* ===================================================== Member Variables */
-    Point origin;
-    int radius;
+    const Point origin;
+    const int radius;
 
     /* ======================================================== Class Methods */
     [[nodiscard]] std::vector<Point> points_on_circumference() const;

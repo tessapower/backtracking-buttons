@@ -170,3 +170,9 @@ void draw_points(std::vector<Point> const& points, Color const& color) {
         }
     }
 }
+
+pixel_class* get_pixel(Point const& p) {
+    return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
+           ? &picture[p.y][p.x]
+           : nullptr;
+}

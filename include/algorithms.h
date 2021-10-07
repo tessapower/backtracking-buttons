@@ -12,6 +12,9 @@
 #include "point.h"
 #include "rect.h"
 
+using PointPredicate = std::function<bool(Point const&)>;
+using OptionalPointVecRef = std::optional<std::reference_wrapper<std::vector<Point>>>;
+
 // TODO: Mark functions that are noexcept
 // TODO: check for const correctness
 // TODO: comment functions
@@ -19,9 +22,6 @@
 void process_image();
 
 std::vector<Rect> discover_all_button_bounds();
-
-using PointPredicate = std::function<bool(Point const&)>;
-using MaybePointVector = std::reference_wrapper<std::vector<Point>>;
 
 /**
  * Discovers the extent of points that are deemed connected to the given point.

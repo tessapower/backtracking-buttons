@@ -1,7 +1,7 @@
 #include "rect.h"
 
 RectIterator Rect::begin() const {
-    return RectIterator{*this};
+    return RectIterator{*this, Point{min_x, min_y}};
 }
 
 RectIterator Rect::end() const {
@@ -22,10 +22,6 @@ void Rect::expand_to_include(Point const& c) {
     max_y = std::max(max_y, c.y);
 }
 
-bool Rect::contains_point(Point const& p) const {
-    return p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y;
-}
-
 std::vector<Point> Rect::points_on_perimeter() const {
     std::vector<Point> points;
     // Top and bottom
@@ -43,18 +39,11 @@ std::vector<Point> Rect::points_on_perimeter() const {
     return points;
 }
 
-bool Rect::is_point_on_perimeter(Point const& p) const {
-    return p.x == min_x || p.x == max_x || p.y == min_y || p.y == max_y;
-}
-
-bool Rect::is_proper_subset_of(Rect const& bounds) const {
-    for (auto const& point : *this) {
-        if (!bounds.contains_point(point) || bounds.is_point_on_perimeter(point)) {
-            return false;
-        }
-    }
-
-    return true;
+bool Rect::is_proper_subset_of(Rect const& other) const {
+    return this->min_x > other.min_x &&
+           this->max_x < other.max_x &&
+           this->min_y > other.min_y &&
+           this->max_y < other.max_y;
 }
 
 RectIterator RectIterator::operator++() {
