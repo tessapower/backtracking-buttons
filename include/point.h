@@ -8,27 +8,27 @@
  */
 class Point {
 public:
-    /* ========================================================== Constructor */
-    constexpr Point(int X, int Y) noexcept: x{X}, y{Y} {};
+  /* ========================================================== Constructor */
+  constexpr Point(int X, int Y) noexcept: x{X}, y{Y} {};
 
-    /* ===================================================== Member Variables */
-    int x;
-    int y;
+  /* ===================================================== Member Variables */
+  int x;
+  int y;
 
-    /* ======================================================== Class Methods */
-    /**
-     * @return Array containing the neighboring top, right, bottom, and left
-     *   points as cartesian coordinates in that order.
-     */
-    [[nodiscard]] std::array<Point, 4> neighbors() const;
+  /* ======================================================== Class Methods */
+  /**
+   * @return Array containing the neighboring top, right, bottom, and left
+   *   points as cartesian coordinates in that order.
+   */
+  [[nodiscard]] std::array<Point, 4> neighbors() const;
 
-    constexpr friend bool operator==(const Point& lhs, const Point& rhs) {
-        return lhs.x == rhs.x && lhs.y == rhs.y;
-    }
+  constexpr friend bool operator==(const Point& lhs, const Point& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+  }
 
-    constexpr friend bool operator!=(const Point& lhs, const Point& rhs) {
-        return !(lhs == rhs);
-    }
+  constexpr friend bool operator!=(const Point& lhs, const Point& rhs) {
+    return !(lhs == rhs);
+  }
 };
 
 #endif //POINT_H

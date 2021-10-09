@@ -33,10 +33,10 @@ std::vector<Rect> discover_all_button_bounds();
  * filled with all discovered points.
  */
 void discover_extent_of_connected_points(
-        Point const& point,
-        Rect &discovered_extent,
-        PointPredicate const& pred_fn,
-        OptionalPointVecRef discovered_points = std::nullopt);
+    Point const& point,
+    Rect &discovered_extent,
+    PointPredicate const& pred_fn,
+    OptionalPointVecRef discovered_points = std::nullopt);
 
 int num_button_holes(Rect const& bounds);
 
