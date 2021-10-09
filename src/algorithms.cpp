@@ -11,6 +11,8 @@
 // This is useful to visualise the process of checking for broken buttons.
 #define DEBUG_VISUALIZATIONS true
 
+constexpr int kNumRequiredButtonHoles = 4;
+
 void alg::process_image() {
   for (auto const &bounds : alg::discover_all_button_bounds()) {
     bool is_broken = false;
@@ -55,6 +57,7 @@ void alg::process_image() {
 
 std::vector<geom::Rect> alg::discover_all_button_bounds() {
   std::vector<geom::Rect> bounds_of_buttons;
+  const geom::Rect image_rect = geom::Rect{0, screenx - 1, 0, screeny - 1};
 
   for (auto const &point : image_rect) {
     auto px = img::get_pixel(point);
