@@ -38,13 +38,11 @@ void process_image() {
                 outer_circumference.begin(),
                 outer_circumference.end(),
                 is_part_of_button);
-
         is_broken |= !std::all_of(
                 inner_circumference.begin(),
                 inner_circumference.end(),
                 is_part_of_button);
         is_broken |= num_button_holes(inner.bounding_box()) != kNumRequiredButtonHoles;
-
 
 #if DEBUG_VISUALIZATIONS
         for (auto const& point : outer_circumference) {
