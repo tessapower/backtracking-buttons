@@ -22,7 +22,7 @@ void process_image() {
     for (auto const& bounds : discover_all_button_bounds()) {
         bool is_broken = false;
 
-        // Draw two concentric circles and require that the pixellated edge of the
+        // Draw two concentric circles and require that the pixelated edge of the
         // button image falls between them.
         const int radius = static_cast<int>(std::max(bounds.width(), bounds.height()) / 2.0);
         const int inner_radius = static_cast<int>(radius * 0.9);
@@ -31,13 +31,14 @@ void process_image() {
         const Circle inner{bounds.center(), inner_radius};
         const Circle outer{bounds.center(), outer_radius};
 
-        const auto outer_circumference = outer.points_on_circumference();
-        const auto inner_circumference = inner.points_on_circumference();
+        auto outer_circumference = outer.circumference();
+        auto inner_circumference = inner.circumference();
 
         is_broken |= std::any_of(
                 outer_circumference.begin(),
                 outer_circumference.end(),
                 is_part_of_button);
+
         is_broken |= !std::all_of(
                 inner_circumference.begin(),
                 inner_circumference.end(),
@@ -46,8 +47,12 @@ void process_image() {
 
 
 #if DEBUG_VISUALIZATIONS
-        draw_points(outer_circumference, Color::LightBlue());
-        draw_points(inner_circumference, Color::LightBlue());
+        for (auto const& point : outer_circumference) {
+            draw_point(point, Color::AzureBlue());
+        }
+        for (auto const& point : inner_circumference) {
+            draw_point(point, Color::AzureBlue());
+        }
 #endif
 
         Color status_color = is_broken ? Color::Red() : Color::Green();
@@ -160,6 +165,13 @@ bool is_part_of_button(Point const& point) {
     }
 
     return false;
+}
+
+void draw_point(Point const& p, Color const& color) {
+    auto px = get_pixel(p);
+    if (px != nullptr) {
+        px->loaddata(color.R, color.G, color.B);
+    }
 }
 
 void draw_points(std::vector<Point> const& points, Color const& color) {

@@ -45,6 +45,8 @@ bool is_part_of_button(Point const& point);
 
 void draw_points(std::vector<Point> const& points, Color const& color);
 
+void draw_point(Point const& p, Color const& color);
+
 pixel_class* get_pixel(Point const& p);
 
 #endif //ALGORITHMS_H

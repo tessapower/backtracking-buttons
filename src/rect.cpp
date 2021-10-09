@@ -48,10 +48,10 @@ bool Rect::is_proper_subset_of(Rect const& other) const {
 
 RectIterator RectIterator::operator++() {
     if (current.x < rect.max_x) {
-        current.x++;
+        ++current.x;
     } else {
         current.x = rect.min_x;
-        current.y++;
+        ++current.y;
     }
 
     return *this;
