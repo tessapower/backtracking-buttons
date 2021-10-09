@@ -53,6 +53,7 @@ void process_image() {
         }
 #endif
 
+        // TODO: Replace with PerimeterIterator
         Color status_color = is_broken ? Color::Red() : Color::EmeraldGreen();
         for (auto const& p : bounds.points_on_perimeter()) {
             draw_point(p, status_color);
