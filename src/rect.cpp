@@ -5,7 +5,11 @@ RectIterator Rect::begin() const {
 }
 
 RectIterator Rect::end() const {
-    return RectIterator{*this, Point{min_x, max_y+1}};
+    return RectIterator{*this, Point{min_x, max_y + 1}};
+}
+
+PerimeterIterator Rect::perimeter() const {
+    return PerimeterIterator{*this, Point{this->min_x, this->min_y}};
 }
 
 void Rect::expand_to_include(Point const& c) {
@@ -13,23 +17,6 @@ void Rect::expand_to_include(Point const& c) {
     max_x = std::max(max_x, c.x);
     min_y = std::min(min_y, c.y);
     max_y = std::max(max_y, c.y);
-}
-
-std::vector<Point> Rect::points_on_perimeter() const {
-    std::vector<Point> points;
-    // Top and bottom
-    for (int x = min_x; x < max_x; ++x) {
-        points.emplace_back(x, min_y);
-        points.emplace_back(x, max_y);
-    }
-
-    // Left and right
-    for (int y = min_y; y < max_y; ++y) {
-        points.emplace_back(min_x, y);
-        points.emplace_back(max_x, y);
-    }
-
-    return points;
 }
 
 bool Rect::is_proper_subset_of(Rect const& other) const {
@@ -45,6 +32,34 @@ RectIterator RectIterator::operator++() {
     } else {
         current.x = rect.min_x;
         ++current.y;
+    }
+
+    return *this;
+}
+
+PerimeterIterator PerimeterIterator::begin() const {
+    return PerimeterIterator{rect, Point{rect.min_x, rect.min_y}};
+}
+
+PerimeterIterator PerimeterIterator::end() const {
+    return PerimeterIterator{rect, Point{rect.min_x, rect.max_y + 1}};
+}
+
+PerimeterIterator PerimeterIterator::operator++() {
+    if (current.y == rect.min_y || current.y == rect.max_y) {
+        if  (current.x < rect.max_x) {
+            ++current.x;
+        } else {
+            current.x = rect.min_x;
+            ++current.y;
+        }
+    } else {
+        if (current.x == rect.min_x) {
+            current.x = rect.max_x;
+        } else if (current.x == rect.max_x) {
+            current.x = rect.min_x;
+            ++current.y;
+        }
     }
 
     return *this;

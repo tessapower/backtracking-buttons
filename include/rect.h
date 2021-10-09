@@ -7,6 +7,7 @@
 #include "point.h"
 
 class RectIterator;
+class PerimeterIterator;
 
 class Rect {
 public:
@@ -24,9 +25,10 @@ public:
     int max_y;
 
     /* ======================================================== Class Methods */
-
     [[nodiscard]] constexpr int width() const { return max_x - min_x; }
     [[nodiscard]] constexpr int height() const { return max_y - min_y; }
+
+    [[nodiscard]] PerimeterIterator perimeter() const;
 
     [[nodiscard]] RectIterator begin() const;
     [[nodiscard]] RectIterator end() const;
@@ -35,7 +37,6 @@ public:
         return Point{(max_x + min_x)/2, (max_y + min_y)/2};
     }
 
-    [[nodiscard]] std::vector<Point> points_on_perimeter() const;
     // TODO: Rename new better cheryl name
     [[nodiscard]] bool is_proper_subset_of(Rect const& other) const;
 
@@ -64,6 +65,32 @@ public:
 private:
     Rect rect;
     Point current = Point{rect.min_x, rect.min_y};
+};
+
+class PerimeterIterator {
+public:
+    /* ========================================================== Constructor */
+    constexpr PerimeterIterator(Rect const& rect, Point starting_point):
+        rect{rect}, current{starting_point} {};
+
+    /* ======================================================== Class Methods */
+    [[nodiscard]] constexpr Point const& operator*() const {
+        return current;
+    };
+
+    PerimeterIterator operator++();
+
+    friend constexpr bool operator!=(PerimeterIterator const& lhs,
+                                     PerimeterIterator const& rhs) {
+        return lhs.current != rhs.current;
+    }
+
+    [[nodiscard]] PerimeterIterator begin() const;
+    [[nodiscard]] PerimeterIterator end() const;
+
+private:
+    Rect rect;
+    Point current;
 };
 
 #endif //RECT_H

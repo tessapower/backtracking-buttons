@@ -53,10 +53,9 @@ void process_image() {
         }
 #endif
 
-        // TODO: Replace with PerimeterIterator
         Color status_color = is_broken ? Color::Red() : Color::EmeraldGreen();
-        for (auto const& p : bounds.points_on_perimeter()) {
-            draw_point(p, status_color);
+        for (auto const& point : bounds.perimeter()) {
+            draw_point(point, status_color);
         }
     }
 }
@@ -147,7 +146,6 @@ int num_button_holes(Rect const& bounds) {
             if (discovered_extent.is_proper_subset_of(bounds)) {
                 num_btn_holes += 1;
 #if DEBUG_VISUALIZATIONS
-                // TODO: Draw single point for each point in discovered_points
                 for (auto const& p : discovered_points) {
                     draw_point(p, Color::AzureBlue());
                 }
