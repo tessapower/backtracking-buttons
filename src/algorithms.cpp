@@ -65,9 +65,6 @@ std::vector<Rect> discover_all_button_bounds() {
 
     for (auto const& point : image_rect) {
         auto px = get_pixel(point);
-        if (!px) {
-            continue;
-        }
 
         const bool did_discover_new_button = is_part_of_button(point) && !px->getexclude();
         if (did_discover_new_button) {
