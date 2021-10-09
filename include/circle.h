@@ -54,7 +54,7 @@ public:
     [[nodiscard]] CircumferenceIterator end() const;
 
 private:
-    Circle circle;
+    Circle const& circle;
     int dx = 0;
     int octant = 0;
 };
