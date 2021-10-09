@@ -16,7 +16,6 @@ using PointPredicate = std::function<bool(Point const&)>;
 using OptionalPointVecRef = std::optional<std::reference_wrapper<std::vector<Point>>>;
 
 // TODO: Mark functions that are noexcept
-// TODO: check for const correctness
 // TODO: comment functions
 
 void process_image();

@@ -8,13 +8,6 @@ RectIterator Rect::end() const {
     return RectIterator{*this, Point{min_x, max_y+1}};
 }
 
-[[nodiscard]] Point Rect::center() const {
-    const int x = (max_x + min_x)/2;
-    const int y = (max_y + min_y)/2;
-
-    return Point{x, y};
-}
-
 void Rect::expand_to_include(Point const& c) {
     min_x = std::min(min_x, c.x);
     max_x = std::max(max_x, c.x);
@@ -55,8 +48,4 @@ RectIterator RectIterator::operator++() {
     }
 
     return *this;
-}
-
-bool operator!=(RectIterator const& lhs, RectIterator const& rhs) {
-    return lhs.current != rhs.current;
 }

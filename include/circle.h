@@ -11,7 +11,7 @@ class CircumferenceIterator;
 class Circle {
 public:
     /* ========================================================== Constructor */
-    Circle(Point o, int r): origin{o}, radius{r} {};
+    constexpr Circle(Point o, int r): origin{o}, radius{r} {};
 
     /* ===================================================== Member Variables */
     const Point origin;
@@ -19,7 +19,10 @@ public:
 
     /* ======================================================== Class Methods */
     [[nodiscard]] CircumferenceIterator circumference() const;
-    [[nodiscard]] Rect bounding_box() const;
+    [[nodiscard]] constexpr Rect bounding_box() const {
+        return Rect{origin.x - radius, origin.x + radius,
+                    origin.y - radius, origin.y + radius};
+    }
 };
 
 class CircumferenceIterator {
@@ -31,13 +34,22 @@ public:
     using reference         = Point&;
 
     /* ========================================================== Constructor */
-    CircumferenceIterator(Circle const& c, int dx): circle{c}, dx{dx} {};
+    constexpr CircumferenceIterator(Circle const& c, int dx): circle{c}, dx{dx} {};
 
     /* ======================================================== Class Methods */
     [[nodiscard]] value_type operator*() const;
     CircumferenceIterator operator++();
-    friend bool operator==(CircumferenceIterator const& lhs, CircumferenceIterator const& rhs);
-    friend bool operator!=(CircumferenceIterator const& lhs, CircumferenceIterator const& rhs);
+
+    constexpr friend bool operator==(CircumferenceIterator const& lhs,
+                                     CircumferenceIterator const& rhs) {
+        return lhs.dx == rhs.dx;
+    }
+
+    constexpr friend bool operator!=(CircumferenceIterator const& lhs,
+                                     CircumferenceIterator const& rhs) {
+        return !(lhs == rhs);
+    }
+
     [[nodiscard]] CircumferenceIterator begin() const;
     [[nodiscard]] CircumferenceIterator end() const;
 

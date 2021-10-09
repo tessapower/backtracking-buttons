@@ -9,11 +9,6 @@ CircumferenceIterator Circle::circumference() const {
     return CircumferenceIterator{*this, 0};
 }
 
-Rect Circle::bounding_box() const {
-    return Rect{origin.x - radius, origin.x + radius,
-                origin.y - radius, origin.y + radius};
-}
-
 CircumferenceIterator CircumferenceIterator::begin() const {
     return CircumferenceIterator{circle, 0};
 }
@@ -47,12 +42,4 @@ CircumferenceIterator CircumferenceIterator::operator++() {
     }
 
     return *this;
-}
-
-bool operator==(CircumferenceIterator const& lhs, CircumferenceIterator const& rhs) {
-    return lhs.dx == rhs.dx;
-}
-
-bool operator!=(CircumferenceIterator const& lhs, CircumferenceIterator const& rhs) {
-    return !(lhs == rhs);
 }

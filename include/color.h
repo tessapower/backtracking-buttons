@@ -6,7 +6,7 @@
 class Color {
 public:
     /* ========================================================== Constructor */
-    Color(uint8_t r, uint8_t g, uint8_t b) noexcept : R{r}, G{g}, B{b} {};
+    constexpr Color(uint8_t r, uint8_t g, uint8_t b) noexcept : R{r}, G{g}, B{b} {};
 
     /* ===================================================== Member Variables */
     const uint8_t R;
@@ -14,9 +14,9 @@ public:
     const uint8_t B;
 
     /* ======================================================== Class Methods */
-    static Color Red() { return Color{255, 0, 0}; }
-    static Color EmeraldGreen() { return Color{0, 204, 102}; }
-    static Color AzureBlue() { return Color{0, 127, 255}; }
+    constexpr static Color Red() { return Color{255, 0, 0}; }
+    constexpr static Color EmeraldGreen() { return Color{0, 204, 102}; }
+    constexpr static Color AzureBlue() { return Color{0, 127, 255}; }
 };
 
 #endif //COLOR_H
