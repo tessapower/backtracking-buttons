@@ -19,7 +19,7 @@ CircumferenceIterator CircumferenceIterator::begin() const {
 }
 
 CircumferenceIterator CircumferenceIterator::end() const {
-    int dx = (int)circle.radius/sqrt(2) + 1;
+    const int dx = (int)circle.radius/sqrt(2) + 1;
     return CircumferenceIterator{circle, dx};
 }
 

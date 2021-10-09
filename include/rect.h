@@ -25,8 +25,8 @@ public:
 
     /* ======================================================== Class Methods */
 
-    [[nodiscard]] inline int width() const { return max_x - min_x; }
-    [[nodiscard]] inline int height() const { return max_y - min_y; }
+    [[nodiscard]] inline constexpr int width() const { return max_x - min_x; }
+    [[nodiscard]] inline constexpr int height() const { return max_y - min_y; }
 
     [[nodiscard]] RectIterator begin() const;
     [[nodiscard]] RectIterator end() const;
