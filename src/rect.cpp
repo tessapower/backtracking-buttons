@@ -39,6 +39,7 @@ PerimeterIterator PerimeterIterator::end() const {
 }
 
 PerimeterIterator PerimeterIterator::operator++() {
+    // Top or bottom edges
     if (current.y == rect.min_y || current.y == rect.max_y) {
         if  (current.x < rect.max_x) {
             ++current.x;
@@ -47,6 +48,7 @@ PerimeterIterator PerimeterIterator::operator++() {
             ++current.y;
         }
     } else {
+        // Flip flop between vertical edges
         if (current.x == rect.min_x) {
             current.x = rect.max_x;
         } else if (current.x == rect.max_x) {

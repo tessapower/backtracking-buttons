@@ -67,9 +67,10 @@ std::vector<Rect> discover_all_button_bounds() {
         auto px = get_pixel(point);
 
         const bool did_discover_new_button = is_part_of_button(point) && !px->getexclude();
+
         if (did_discover_new_button) {
             // Initialize our bounds to a 0-by-0 box which discover_bounds expands
-            Rect discovered_extent(point);
+            Rect discovered_extent{point};
             discover_extent_of_connected_points(
                     point,
                     discovered_extent,
@@ -115,7 +116,6 @@ int num_button_holes(Rect const& bounds) {
 
     // Iterate over the pixels within the bounding box of the button and flip
     // their exclude status. Then the pixels are in a "clean" slate.
-    //
     for (auto const& point : bounds) {
         get_pixel(point)->setexclude(false);
     }
@@ -127,6 +127,7 @@ int num_button_holes(Rect const& bounds) {
         }
 
         const bool did_discover_new_empty_area = !is_part_of_button(point) && !px->getexclude();
+
         if (did_discover_new_empty_area) {
             std::vector<Point> discovered_points{};
             Rect discovered_extent = Rect{point};
@@ -138,9 +139,11 @@ int num_button_holes(Rect const& bounds) {
                     discovered_points);
 
             // If the connected pixels touch the bounds, then the empty area
-            // discovered isn't a fully enclosed button hole
-            if (discovered_extent.is_proper_subset_of(bounds)) {
-                num_btn_holes += 1;
+            // discovered isn't a fully enclosed buttonhole. Conversely, if it
+            // was then we have found a buttonhole.
+            if (discovered_extent.is_fully_enclosed_by(bounds)) {
+                num_btn_holes++;
+
 #if DEBUG_VISUALIZATIONS
                 for (auto const& p : discovered_points) {
                     draw_point(p, Color::AzureBlue());
