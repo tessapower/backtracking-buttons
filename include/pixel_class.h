@@ -1,9 +1,11 @@
-#ifndef PIXEL_H
-#define PIXEL_H
+#ifndef PIXEL_CLASS_H
+#define PIXEL_CLASS_H
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+
+namespace img {
 
 class pixel_class {
 private:
@@ -19,4 +21,6 @@ public:
   bool getexclude() { return exclude; }
 };
 
-#endif // PIXEL_H
+} // namespace img
+
+#endif // PIXEL_CLASS_H

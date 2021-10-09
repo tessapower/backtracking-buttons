@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+namespace geom {
+
 class Color {
 public:
   /* ========================================================== Constructor */
@@ -19,5 +21,7 @@ public:
   constexpr static Color EmeraldGreen() { return Color{0, 204, 102}; }
   constexpr static Color AzureBlue() { return Color{0, 127, 255}; }
 };
+
+} // namespace geom
 
 #endif // COLOR_H

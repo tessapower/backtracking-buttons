@@ -1,25 +1,25 @@
 #include "rect.h"
 
-RectIterator Rect::begin() const {
+geom::RectIterator geom::Rect::begin() const {
   return RectIterator{*this, Point{min_x, min_y}};
 }
 
-RectIterator Rect::end() const {
+geom::RectIterator geom::Rect::end() const {
   return RectIterator{*this, Point{min_x, max_y + 1}};
 }
 
-PerimeterIterator Rect::perimeter() const {
+geom::PerimeterIterator geom::Rect::perimeter() const {
   return PerimeterIterator{*this, Point{this->min_x, this->min_y}};
 }
 
-void Rect::expand_to_include(Point const &c) {
+void geom::Rect::expand_to_include(Point const &c) {
   min_x = std::min(min_x, c.x);
   max_x = std::max(max_x, c.x);
   min_y = std::min(min_y, c.y);
   max_y = std::max(max_y, c.y);
 }
 
-RectIterator RectIterator::operator++() {
+geom::RectIterator geom::RectIterator::operator++() {
   if (current.x < rect.max_x) {
     ++current.x;
   } else {
@@ -30,15 +30,15 @@ RectIterator RectIterator::operator++() {
   return *this;
 }
 
-PerimeterIterator PerimeterIterator::begin() const {
+geom::PerimeterIterator geom::PerimeterIterator::begin() const {
   return PerimeterIterator{rect, Point{rect.min_x, rect.min_y}};
 }
 
-PerimeterIterator PerimeterIterator::end() const {
+geom::PerimeterIterator geom::PerimeterIterator::end() const {
   return PerimeterIterator{rect, Point{rect.min_x, rect.max_y + 1}};
 }
 
-PerimeterIterator PerimeterIterator::operator++() {
+geom::PerimeterIterator geom::PerimeterIterator::operator++() {
   // Top or bottom edges
   if (current.y == rect.min_y || current.y == rect.max_y) {
     if (current.x < rect.max_x) {

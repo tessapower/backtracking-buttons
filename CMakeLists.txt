@@ -8,7 +8,7 @@ set(SOURCES
         src/algorithms.cpp
         src/circle.cpp
         src/point.cpp
-        src/io.cpp
+        src/img.cpp
         src/pixel_class.cpp
         src/rect.cpp
         src/statics.cpp
@@ -19,7 +19,7 @@ set(HEADERS
         include/circle.h
         include/color.h
         include/point.h
-        include/io.h
+        include/img.h
         include/pixel_class.h
         include/rect.h
         include/statics.h

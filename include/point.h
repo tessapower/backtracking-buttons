@@ -3,6 +3,8 @@
 
 #include <array>
 
+namespace geom {
+
 /**
  * A point on a 2D Cartesian coordinate plane.
  */
@@ -30,5 +32,7 @@ public:
     return !(lhs == rhs);
   }
 };
+
+} // namespace geom
 
 #endif // POINT_H

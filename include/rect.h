@@ -6,6 +6,8 @@
 
 #include "point.h"
 
+namespace geom {
+
 class RectIterator;
 class PerimeterIterator;
 
@@ -39,8 +41,7 @@ public:
 
   [[nodiscard]] constexpr bool is_fully_enclosed_by(Rect const &other) const {
     return this->min_x > other.min_x &&
-           this->max_x < other.max_x &&
-           this->min_y > other.min_y &&
+           this->max_x<other.max_x &&this->min_y> other.min_y &&
            this->max_y < other.max_y;
   }
 
@@ -93,5 +94,7 @@ private:
   Rect rect;
   Point current;
 };
+
+} // namespace geom
 
 #endif // RECT_H

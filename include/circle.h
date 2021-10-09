@@ -6,6 +6,8 @@
 #include <cmath>
 #include <vector>
 
+namespace geom {
+
 class CircumferenceIterator;
 
 class Circle {
@@ -27,6 +29,7 @@ public:
 
 class CircumferenceIterator {
 public:
+  // Include the usual iterator tags for compatability with STL algorithms
   using iterator_category = std::forward_iterator_tag;
   using difference_type = int;
   using value_type = Point;
@@ -59,5 +62,7 @@ private:
   int dx = 0;
   int octant = 0;
 };
+
+} // namespace geom
 
 #endif // CIRCLE_H

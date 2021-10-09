@@ -6,14 +6,14 @@
 #include <cstdlib>
 
 #include "algorithms.h"
-#include "io.h"
+#include "img.h"
 
 #define OUTPUT_FILE "Buttons_processed.ppm"
 
 int main() {
-  loadButtons();
-  process_image();
-  saveButtons(OUTPUT_FILE);
+  img::loadButtons();
+  alg::process_image();
+  img::saveButtons(OUTPUT_FILE);
 
   return EXIT_SUCCESS;
 }

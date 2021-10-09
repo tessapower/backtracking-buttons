@@ -1,9 +1,10 @@
-#include "io.h"
+#include "img.h"
+#include "algorithms.h"
 #include "statics.h"
 #include <fstream>
 
 // WARNING: This function cannot be altered and may exit the program!
-void loadButtons() {
+void img::loadButtons() {
   // load the picture from Buttons.ppm
   int x, y, R, G, B;
   std::fstream infile;
@@ -29,7 +30,7 @@ void loadButtons() {
   infile.close();
 }
 
-void saveButtons(std::string const &output_filename) {
+void img::saveButtons(std::string const &output_filename) {
   std::fstream output_file;
 
   std::cout << "Writing to " << output_filename << std::endl;
@@ -53,4 +54,26 @@ void saveButtons(std::string const &output_filename) {
   }
 
   output_file.close();
+}
+
+bool img::is_part_of_button(geom::Point const &point) {
+  auto px = get_pixel(point);
+  if (px != nullptr) {
+    return px->getR() > 128;
+  }
+
+  return false;
+}
+
+void img::draw_point(geom::Point const &p, geom::Color const &color) {
+  auto px = get_pixel(p);
+  if (px != nullptr) {
+    px->loaddata(color.R, color.G, color.B);
+  }
+}
+
+img::pixel_class *img::get_pixel(geom::Point const &p) {
+  return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
+             ? &picture[p.y][p.x]
+             : nullptr;
 }

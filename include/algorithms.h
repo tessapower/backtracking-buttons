@@ -12,12 +12,12 @@
 #include "point.h"
 #include "rect.h"
 
-using PointPredicate = std::function<bool(Point const &)>;
+using PointPredicate = std::function<bool(geom::Point const &)>;
 using OptionalPointVecRef =
-    std::optional<std::reference_wrapper<std::vector<Point>>>;
+    std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
 
-// TODO: Create namespaces
-
+// TODO: Document what each namespace contains
+namespace alg {
 /**
  * The primary function which will discover all buttons,
  * categorize them as broken or not broken, and output a new
@@ -29,11 +29,11 @@ using OptionalPointVecRef =
 void process_image();
 
 /**
- * This function discovers all of the bounding boxes for the buttons.
- * It does not categorize the buttons.
+ * Discovers all the bounding boxes for the buttons. It does not categorize
+ * the buttons as broken or not broken.
  * @return A vector containing the bounds of all the buttons in the image.
  */
-std::vector<Rect> discover_all_button_bounds();
+std::vector<geom::Rect> discover_all_button_bounds();
 
 /**
  * Discovers the extent of points that are deemed connected to the given point.
@@ -46,15 +46,12 @@ std::vector<Rect> discover_all_button_bounds();
  * be filled with all discovered points.
  */
 void discover_extent_of_connected_points(
-    Point const &point, Rect &discovered_extent, PointPredicate const &pred_fn,
+    geom::Point const &point, geom::Rect &discovered_extent,
+    PointPredicate const &pred_fn,
     OptionalPointVecRef discovered_points = std::nullopt);
 
-int discover_num_button_holes(Rect const &bounds);
+int discover_num_button_holes(geom::Rect const &bounds);
 
-bool is_part_of_button(Point const &point);
-
-void draw_point(Point const &p, Color const &color);
-
-pixel_class *get_pixel(Point const &p);
+} // namespace alg
 
 #endif // ALGORITHMS_H
