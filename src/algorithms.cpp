@@ -36,10 +36,12 @@ void process_image() {
                 outer_circumference.begin(),
                 outer_circumference.end(),
                 is_part_of_button);
-        is_broken |= !std::all_of(
+
+        is_broken |= std::any_of(
                 inner_circumference.begin(),
                 inner_circumference.end(),
-                is_part_of_button);
+                [](auto p) { return !is_part_of_button(p); });
+
         is_broken |= num_button_holes(inner.bounding_box()) != kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
