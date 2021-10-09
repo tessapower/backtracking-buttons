@@ -16,9 +16,23 @@ using PointPredicate = std::function<bool(Point const &)>;
 using OptionalPointVecRef =
     std::optional<std::reference_wrapper<std::vector<Point>>>;
 
-// TODO: comment functions
+// TODO: Create namespaces
+
+/**
+ * The primary function which will discover all buttons,
+ * categorize them as broken or not broken, and output a new
+ * image. The image will contain the buttons with red boxes
+ * to indicate broken buttons, or otherwise green for OK.
+ *
+ * Set DEBUG_VISUALIZATIONS to true to enable debug visualizations.
+ */
 void process_image();
 
+/**
+ * This function discovers all of the bounding boxes for the buttons.
+ * It does not categorize the buttons.
+ * @return A vector containing the bounds of all the buttons in the image.
+ */
 std::vector<Rect> discover_all_button_bounds();
 
 /**
@@ -35,7 +49,7 @@ void discover_extent_of_connected_points(
     Point const &point, Rect &discovered_extent, PointPredicate const &pred_fn,
     OptionalPointVecRef discovered_points = std::nullopt);
 
-int num_button_holes(Rect const &bounds);
+int discover_num_button_holes(Rect const &bounds);
 
 bool is_part_of_button(Point const &point);
 

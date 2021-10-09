@@ -10,8 +10,6 @@
 
 constexpr int kNumRequiredButtonHoles = 4;
 
-// TODO: Document works for any size button
-
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
 #define DEBUG_VISUALIZATIONS true
@@ -39,8 +37,7 @@ void process_image() {
                              inner_circumference.end(),
                              [](auto p) { return !is_part_of_button(p); });
 
-    is_broken |=
-        num_button_holes(inner.bounding_box()) != kNumRequiredButtonHoles;
+    is_broken |= discover_num_button_holes(inner.bounding_box()) != kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
     for (auto const &point : outer_circumference) {
@@ -108,7 +105,13 @@ void discover_extent_of_connected_points(
   }
 }
 
-int num_button_holes(Rect const &bounds) {
+/**
+ * Explores the area within the bounds (which is expected to be the bounds of a
+ * button) to determine the number of button holes the button has.
+ * @param bounds
+ * @return The number of enclosed button holes the button has
+ */
+int discover_num_button_holes(Rect const &bounds) {
   int num_btn_holes = 0;
 
   // Iterate over the pixels within the bounding box of the button and flip
