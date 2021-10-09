@@ -54,7 +54,9 @@ void process_image() {
 #endif
 
         Color status_color = is_broken ? Color::Red() : Color::EmeraldGreen();
-        draw_points(bounds.points_on_perimeter(), status_color);
+        for (auto const& p : bounds.points_on_perimeter()) {
+            draw_point(p, status_color);
+        }
     }
 }
 
@@ -145,7 +147,9 @@ int num_button_holes(Rect const& bounds) {
                 num_btn_holes += 1;
 #if DEBUG_VISUALIZATIONS
                 // TODO: Draw single point for each point in discovered_points
-                draw_points(discovered_points, Color::AzureBlue());
+                for (auto const& p : discovered_points) {
+                    draw_point(p, Color::AzureBlue());
+                }
 #endif
             }
         }
@@ -165,19 +169,10 @@ bool is_part_of_button(Point const& point) {
     return false;
 }
 
-void draw_point(Point const& p, Color const& color) {
+inline void draw_point(Point const& p, Color const& color) {
     auto px = get_pixel(p);
     if (px != nullptr) {
         px->loaddata(color.R, color.G, color.B);
-    }
-}
-
-void draw_points(std::vector<Point> const& points, Color const& color) {
-    for (auto const& p : points) {
-        auto px = get_pixel(p);
-        if (px != nullptr) {
-            px->loaddata(color.R, color.G, color.B);
-        }
     }
 }
 
