@@ -15,8 +15,8 @@ public:
 
     /* ======================================================== Class Methods */
     static Color Red() { return Color{255, 0, 0}; }
-    static Color Green() { return Color{0, 204, 102}; }
-    static Color LightBlue() { return Color{0, 127, 255}; }
+    static Color EmeraldGreen() { return Color{0, 204, 102}; }
+    static Color AzureBlue() { return Color{0, 127, 255}; }
 };
 
 #endif //COLOR_H

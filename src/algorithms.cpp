@@ -53,7 +53,7 @@ void process_image() {
         }
 #endif
 
-        Color status_color = is_broken ? Color::Red() : Color::Green();
+        Color status_color = is_broken ? Color::Red() : Color::EmeraldGreen();
         draw_points(bounds.points_on_perimeter(), status_color);
     }
 }
@@ -145,7 +145,7 @@ int num_button_holes(Rect const& bounds) {
                 num_btn_holes += 1;
 #if DEBUG_VISUALIZATIONS
                 // TODO: Draw single point for each point in discovered_points
-                draw_points(discovered_points, Color::LightBlue());
+                draw_points(discovered_points, Color::AzureBlue());
 #endif
             }
         }
