@@ -14,8 +14,8 @@ CircumferenceIterator CircumferenceIterator::begin() const {
 }
 
 CircumferenceIterator CircumferenceIterator::end() const {
-    const int dx = (int)circle.radius/sqrt(2) + 1;
-    return CircumferenceIterator{circle, dx};
+    const int end_dx = static_cast<int>(circle.radius / sqrt(2) + 1);
+    return CircumferenceIterator{circle, end_dx};
 }
 
 Point CircumferenceIterator::operator*() const {
