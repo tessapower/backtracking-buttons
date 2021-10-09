@@ -19,13 +19,6 @@ void Rect::expand_to_include(Point const& c) {
     max_y = std::max(max_y, c.y);
 }
 
-bool Rect::is_proper_subset_of(Rect const& other) const {
-    return this->min_x > other.min_x &&
-           this->max_x < other.max_x &&
-           this->min_y > other.min_y &&
-           this->max_y < other.max_y;
-}
-
 RectIterator RectIterator::operator++() {
     if (current.x < rect.max_x) {
         ++current.x;
