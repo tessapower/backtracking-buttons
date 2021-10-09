@@ -8,7 +8,7 @@
 int main() {
     loadButtons();
     process_image();
-    output_result(OUTPUT_FILE);
+    saveButtons(OUTPUT_FILE);
 
     return EXIT_SUCCESS;
 }

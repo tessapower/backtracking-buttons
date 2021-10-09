@@ -29,7 +29,7 @@ void loadButtons() {
     infile.close();
 }
 
-void output_result(std::string const& output_filename) {
+void saveButtons(std::string const& output_filename) {
     std::fstream output_file;
 
     std::cout << "Writing to " << output_filename << std::endl;
