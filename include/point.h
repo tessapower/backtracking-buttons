@@ -9,7 +9,7 @@
 class Point {
 public:
     /* ========================================================== Constructor */
-    constexpr Point(int X, int Y): x{X}, y{Y} {};
+    constexpr Point(int X, int Y) noexcept: x{X}, y{Y} {};
 
     /* ===================================================== Member Variables */
     int x;

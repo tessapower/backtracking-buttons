@@ -12,10 +12,10 @@ class PerimeterIterator;
 class Rect {
 public:
     /* ========================================================= Constructors */
-    constexpr explicit Rect(Point p):
+    constexpr explicit Rect(Point p) noexcept:
         min_x{p.x}, max_x{p.x}, min_y{p.y}, max_y{p.y} {};
 
-    constexpr Rect(int min_x, int max_x, int min_y, int max_y):
+    constexpr Rect(int min_x, int max_x, int min_y, int max_y) noexcept:
         min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
     /* ===================================================== Member Variables */
@@ -50,7 +50,7 @@ public:
 class RectIterator {
 public:
     /* ========================================================== Constructor */
-    RectIterator(Rect const& rect, Point starting_point):
+    RectIterator(Rect const& rect, Point starting_point) noexcept:
         rect{rect}, current{starting_point} {};
 
     /* ======================================================== Class Methods */
@@ -74,7 +74,7 @@ private:
 class PerimeterIterator {
 public:
     /* ========================================================== Constructor */
-    constexpr PerimeterIterator(Rect const& rect, Point starting_point):
+    constexpr PerimeterIterator(Rect const& rect, Point starting_point) noexcept:
         rect{rect}, current{starting_point} {};
 
     /* ======================================================== Class Methods */

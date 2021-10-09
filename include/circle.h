@@ -11,7 +11,7 @@ class CircumferenceIterator;
 class Circle {
 public:
     /* ========================================================== Constructor */
-    constexpr Circle(Point o, int r): origin{o}, radius{r} {};
+    constexpr Circle(Point o, int r) noexcept: origin{o}, radius{r} {};
 
     /* ===================================================== Member Variables */
     const Point origin;
@@ -34,7 +34,7 @@ public:
     using reference         = Point&;
 
     /* ========================================================== Constructor */
-    constexpr CircumferenceIterator(Circle const& c, int dx): circle{c}, dx{dx} {};
+    constexpr CircumferenceIterator(Circle const& c, int dx) noexcept: circle{c}, dx{dx} {};
 
     /* ======================================================== Class Methods */
     [[nodiscard]] value_type operator*() const;
