@@ -12,8 +12,9 @@
 #include "point.h"
 #include "rect.h"
 
-using PointPredicate = std::function<bool(Point const&)>;
-using OptionalPointVecRef = std::optional<std::reference_wrapper<std::vector<Point>>>;
+using PointPredicate = std::function<bool(Point const &)>;
+using OptionalPointVecRef =
+    std::optional<std::reference_wrapper<std::vector<Point>>>;
 
 // TODO: Mark functions that are noexcept
 // TODO: comment functions
@@ -29,21 +30,19 @@ std::vector<Rect> discover_all_button_bounds();
  * connected points as they are discovered.
  * @param[in] pred_fn A predicate function which points must pass to be
  * considered part of the discovered extent.
- *  * @param[out] discovered_points An optional vector which, if provided, will be
- * filled with all discovered points.
+ * @param[out] discovered_points An optional vector which, if provided, will
+ * be filled with all discovered points.
  */
 void discover_extent_of_connected_points(
-    Point const& point,
-    Rect &discovered_extent,
-    PointPredicate const& pred_fn,
+    Point const &point, Rect &discovered_extent, PointPredicate const &pred_fn,
     OptionalPointVecRef discovered_points = std::nullopt);
 
-int num_button_holes(Rect const& bounds);
+int num_button_holes(Rect const &bounds);
 
-bool is_part_of_button(Point const& point);
+bool is_part_of_button(Point const &point);
 
-void draw_point(Point const& p, Color const& color);
+void draw_point(Point const &p, Color const &color);
 
-pixel_class* get_pixel(Point const& p);
+pixel_class *get_pixel(Point const &p);
 
-#endif //ALGORITHMS_H
+#endif // ALGORITHMS_H

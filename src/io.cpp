@@ -1,6 +1,6 @@
-#include <fstream>
 #include "io.h"
 #include "statics.h"
+#include <fstream>
 
 // WARNING: This function cannot be altered and may exit the program!
 void loadButtons() {
@@ -15,10 +15,10 @@ void loadButtons() {
     std::cout << "ERROR: not able to open " << infilename << std::endl;
     std::exit(2);
   }
-  std::getline(infile, line);  // this line is "P3"
-  std::getline(infile, line);  // this line is "# filename"
-  infile >> screenx >> screeny;  // this line is the size
-  infile >> maxcolours;  // this line is 256
+  std::getline(infile, line);   // this line is "P3"
+  std::getline(infile, line);   // this line is "# filename"
+  infile >> screenx >> screeny; // this line is the size
+  infile >> maxcolours;         // this line is 256
   for (y = 0; y < screeny; y++) {
     for (x = 0; x < screenx; x++) {
       infile >> R >> G >> B;
@@ -29,7 +29,7 @@ void loadButtons() {
   infile.close();
 }
 
-void saveButtons(std::string const& output_filename) {
+void saveButtons(std::string const &output_filename) {
   std::fstream output_file;
 
   std::cout << "Writing to " << output_filename << std::endl;

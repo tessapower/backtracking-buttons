@@ -1,5 +1,5 @@
-#include <array>
 #include "point.h"
+#include <array>
 
 std::array<Point, 4> Point::neighbors() const {
   // We base the neighboring points on the graphics Cartesian Coordinate system

@@ -2,8 +2,8 @@
 // Created by Tessa Power on 1/10/21.
 //
 
-#include <cassert>
 #include "circle.h"
+#include <cassert>
 
 CircumferenceIterator Circle::circumference() const {
   return CircumferenceIterator{*this, 0};
@@ -22,17 +22,26 @@ Point CircumferenceIterator::operator*() const {
   const int r = circle.radius;
   const int dy = (int)sqrt(pow(r, 2) - pow(dx, 2));
 
-  Point const& origin = circle.origin;
-  switch(octant) {
-    case 0: return Point{origin.x + dx, origin.y + dy};
-    case 1: return Point{origin.x + dx, origin.y - dy};
-    case 2: return Point{origin.x - dx, origin.y + dy};
-    case 3: return Point{origin.x - dx, origin.y - dy};
-    case 4: return Point{origin.x + dy, origin.y + dx};
-    case 5: return Point{origin.x + dy, origin.y - dx};
-    case 6: return Point{origin.x - dy, origin.y + dx};
-    case 7: return Point{origin.x - dy, origin.y - dx};
-    default: assert(false);
+  Point const &origin = circle.origin;
+  switch (octant) {
+  case 0:
+    return Point{origin.x + dx, origin.y + dy};
+  case 1:
+    return Point{origin.x + dx, origin.y - dy};
+  case 2:
+    return Point{origin.x - dx, origin.y + dy};
+  case 3:
+    return Point{origin.x - dx, origin.y - dy};
+  case 4:
+    return Point{origin.x + dy, origin.y + dx};
+  case 5:
+    return Point{origin.x + dy, origin.y - dx};
+  case 6:
+    return Point{origin.x - dy, origin.y + dx};
+  case 7:
+    return Point{origin.x - dy, origin.y - dx};
+  default:
+    assert(false);
   }
 }
 

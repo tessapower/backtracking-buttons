@@ -12,7 +12,7 @@ PerimeterIterator Rect::perimeter() const {
   return PerimeterIterator{*this, Point{this->min_x, this->min_y}};
 }
 
-void Rect::expand_to_include(Point const& c) {
+void Rect::expand_to_include(Point const &c) {
   min_x = std::min(min_x, c.x);
   max_x = std::max(max_x, c.x);
   min_y = std::min(min_y, c.y);
@@ -41,7 +41,7 @@ PerimeterIterator PerimeterIterator::end() const {
 PerimeterIterator PerimeterIterator::operator++() {
   // Top or bottom edges
   if (current.y == rect.min_y || current.y == rect.max_y) {
-    if  (current.x < rect.max_x) {
+    if (current.x < rect.max_x) {
       ++current.x;
     } else {
       current.x = rect.min_x;

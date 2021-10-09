@@ -6,9 +6,9 @@
 #define OUTPUT_FILE "Buttons_processed.ppm"
 
 int main() {
-    loadButtons();
-    process_image();
-    saveButtons(OUTPUT_FILE);
+  loadButtons();
+  process_image();
+  saveButtons(OUTPUT_FILE);
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }

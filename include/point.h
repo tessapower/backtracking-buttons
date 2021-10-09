@@ -9,7 +9,7 @@
 class Point {
 public:
   /* ========================================================== Constructor */
-  constexpr Point(int X, int Y) noexcept: x{X}, y{Y} {};
+  constexpr Point(int X, int Y) noexcept : x{X}, y{Y} {};
 
   /* ===================================================== Member Variables */
   int x;
@@ -22,13 +22,13 @@ public:
    */
   [[nodiscard]] std::array<Point, 4> neighbors() const;
 
-  constexpr friend bool operator==(const Point& lhs, const Point& rhs) {
+  constexpr friend bool operator==(const Point &lhs, const Point &rhs) {
     return lhs.x == rhs.x && lhs.y == rhs.y;
   }
 
-  constexpr friend bool operator!=(const Point& lhs, const Point& rhs) {
+  constexpr friend bool operator!=(const Point &lhs, const Point &rhs) {
     return !(lhs == rhs);
   }
 };
 
-#endif //POINT_H
+#endif // POINT_H
