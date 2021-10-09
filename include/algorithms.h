@@ -16,9 +16,7 @@ using PointPredicate = std::function<bool(Point const &)>;
 using OptionalPointVecRef =
     std::optional<std::reference_wrapper<std::vector<Point>>>;
 
-// TODO: Mark functions that are noexcept
 // TODO: comment functions
-
 void process_image();
 
 std::vector<Rect> discover_all_button_bounds();

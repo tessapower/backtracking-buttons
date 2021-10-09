@@ -11,8 +11,6 @@
 constexpr int kNumRequiredButtonHoles = 4;
 
 // TODO: Document works for any size button
-// TODO: Document C++ standard
-// TODO: Document Styleguide
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
