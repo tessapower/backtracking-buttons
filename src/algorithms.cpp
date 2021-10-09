@@ -25,11 +25,9 @@ void process_image() {
         // Draw two concentric circles and require that the pixelated edge of the
         // button image falls between them.
         const int radius = static_cast<int>(std::max(bounds.width(), bounds.height()) / 2.0);
-        const int inner_radius = static_cast<int>(radius * 0.9);
-        const int outer_radius = static_cast<int>(radius * 1.2);
 
-        const Circle inner{bounds.center(), inner_radius};
-        const Circle outer{bounds.center(), outer_radius};
+        const Circle outer{bounds.center(), static_cast<int>(radius * 1.2)};
+        const Circle inner{bounds.center(), static_cast<int>(radius * 0.9)};
 
         auto outer_circumference = outer.circumference();
         auto inner_circumference = inner.circumference();
@@ -63,7 +61,6 @@ void process_image() {
 std::vector<Rect> discover_all_button_bounds() {
     std::vector<Rect> bounds_of_buttons;
 
-    Rect image_rect = Rect{0, screenx, 0, screeny};
     for (auto const& point : image_rect) {
         auto px = get_pixel(point);
         if (!px) {
