@@ -1,0 +1,4 @@
+dist/*
+!dist/sub
+dist/sub/*
+!dist/sub/main.cpp

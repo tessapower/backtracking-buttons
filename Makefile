@@ -79,6 +79,7 @@ sub: dist _fake_sysinclude  ## Create a submittable assignment
 		| egrep -v '^#define ([A-Z_]+)?_H' \
 		| egrep -v '^#endif // ([A-Z_]+)?_H' \
 		| egrep -v '^#include <.*' \
+		| egrep -v '^#include ".*' \
 		| cat -s - \
 		>> $(SUBMISSION_DIR)/main.cpp
 

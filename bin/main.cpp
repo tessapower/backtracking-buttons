@@ -8,12 +8,12 @@
 #include "algorithms.h"
 #include "img.h"
 
-#define OUTPUT_FILE "Buttons_processed.ppm"
+const std::string kOutputFilename = "Buttons_processed.ppm";
 
 int main() {
   img::loadButtons();
   alg::process_image();
-  img::saveButtons(OUTPUT_FILE);
+  img::saveButtons(kOutputFilename);
 
   return EXIT_SUCCESS;
 }
