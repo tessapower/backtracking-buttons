@@ -73,7 +73,8 @@ void img::draw_point(geom::Point const &p, geom::Color const &color) {
 }
 
 img::pixel_class *img::get_pixel(geom::Point const &p) {
-  return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
-             ? &picture[p.y][p.x]
+  return (p.get_x() >= 0 && p.get_x() < screenx && p.get_y() >= 0 &&
+          p.get_y() < screeny)
+             ? &picture[p.get_y()][p.get_x()]
              : nullptr;
 }

@@ -15,16 +15,20 @@ public:
   /* ========================================================== Constructor */
   constexpr Circle(Point o, int r) noexcept : origin{o}, radius{r} {};
 
+  /* ======================================================== Class Methods */
+  [[nodiscard]] Point get_origin() const { return origin; }
+  [[nodiscard]] int get_radius() const { return radius; }
+
+  [[nodiscard]] CircumferenceIterator circumference() const;
+  [[nodiscard]] constexpr Rect bounding_box() const {
+    return Rect{origin.get_x() - radius, origin.get_x() + radius,
+                origin.get_y() - radius, origin.get_y() + radius};
+  }
+
+private:
   /* ===================================================== Member Variables */
   const Point origin;
   const int radius;
-
-  /* ======================================================== Class Methods */
-  [[nodiscard]] CircumferenceIterator circumference() const;
-  [[nodiscard]] constexpr Rect bounding_box() const {
-    return Rect{origin.x - radius, origin.x + radius, origin.y - radius,
-                origin.y + radius};
-  }
 };
 
 class CircumferenceIterator {

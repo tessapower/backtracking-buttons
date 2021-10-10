@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "point.h"
+#include "statics.h"
 
 namespace geom {
 
@@ -15,18 +16,18 @@ class Rect {
 public:
   /* ========================================================= Constructors */
   constexpr explicit Rect(Point p) noexcept
-      : min_x{p.x}, max_x{p.x}, min_y{p.y}, max_y{p.y} {};
+      : min_x{p.get_x()}, max_x{p.get_x()}, min_y{p.get_y()}, max_y{
+                                                                  p.get_y()} {};
 
   constexpr Rect(int min_x, int max_x, int min_y, int max_y) noexcept
       : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
-  /* ===================================================== Member Variables */
-  int min_x;
-  int max_x;
-  int min_y;
-  int max_y;
-
   /* ======================================================== Class Methods */
+  [[nodiscard]] int get_min_x() const { return min_x; }
+  [[nodiscard]] int get_max_x() const { return max_x; }
+  [[nodiscard]] int get_min_y() const { return min_y; }
+  [[nodiscard]] int get_max_y() const { return max_y; }
+
   [[nodiscard]] constexpr int width() const { return max_x - min_x; }
   [[nodiscard]] constexpr int height() const { return max_y - min_y; }
 
@@ -46,6 +47,13 @@ public:
   }
 
   void expand_to_include(Point const &c);
+
+private:
+  /* ===================================================== Member Variables */
+  int min_x;
+  int max_x;
+  int min_y;
+  int max_y;
 };
 
 class RectIterator {
@@ -67,7 +75,7 @@ public:
 
 private:
   Rect rect;
-  Point current = Point{rect.min_x, rect.min_y};
+  Point current = Point{rect.get_min_x(), rect.get_min_y()};
 };
 
 class PerimeterIterator {

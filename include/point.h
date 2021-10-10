@@ -13,11 +13,10 @@ public:
   /* ========================================================== Constructor */
   constexpr Point(int X, int Y) noexcept : x{X}, y{Y} {};
 
-  /* ===================================================== Member Variables */
-  int x;
-  int y;
-
   /* ======================================================== Class Methods */
+  [[nodiscard]] int get_x() const { return x; }
+  [[nodiscard]] int get_y() const { return y; }
+
   /**
    * @return Array containing the neighboring top, right, bottom, and left
    *   points as cartesian coordinates in that order.
@@ -31,6 +30,11 @@ public:
   constexpr friend bool operator!=(const Point &lhs, const Point &rhs) {
     return !(lhs == rhs);
   }
+
+private:
+  /* ===================================================== Member Variables */
+  int x;
+  int y;
 };
 
 } // namespace geom

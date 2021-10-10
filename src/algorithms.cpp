@@ -9,7 +9,7 @@
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
-#define DEBUG_VISUALIZATIONS true
+#define DEBUG_VISUALIZATIONS false
 
 constexpr int kNumRequiredButtonHoles = 4;
 
@@ -139,8 +139,9 @@ int alg::discover_num_button_holes(geom::Rect const &bounds) {
 
       discover_extent_of_connected_points(
           point, discovered_extent,
-          [](geom::Point const &p) { return !img::is_part_of_button(p); },
+          [](geom::Point const &p) { return !img::is_part_of_button(p); }
 #if DEBUG_VISUALIZATIONS
+          ,
           discovered_points
 #endif
       );
