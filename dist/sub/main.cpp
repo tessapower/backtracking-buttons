@@ -1,7 +1,9 @@
 // Tessa Power 14112766
 // Assignment 3
+//
 // Styleguide: Google C++ Style Guidelines
 // https://google.github.io/styleguide/cppguide.html
+//
 // C++ Standard: C++17
 // clang++ -std=c++17 -o main main.cpp && ./main
 
@@ -21,7 +23,7 @@ int screenx, screeny, maxcolours; // you must use these
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
-#define DEBUG_VISUALIZATIONS true
+#define DEBUG_VISUALIZATIONS false
 
 /* =============================================================================
  *   geom (namespace)
@@ -44,16 +46,15 @@ class CircumferenceIterator;
  */
 class Point {
 public:
-  /* ============================================================ Constructor */
+  /* ========================================================== Constructor */
   constexpr Point(int X, int Y) noexcept : x{X}, y{Y} {};
 
-  /* ======================================================= Member Variables */
-  int x;
-  int y;
+  /* ======================================================== Class Methods */
+  [[nodiscard]] int get_x() const { return x; }
+  [[nodiscard]] int get_y() const { return y; }
 
-  /* ========================================================== Class Methods */
   /**
-   * @return Array containing the neighboring top, right, bottom, & left
+   * @return Array containing the neighboring top, right, bottom, and left
    *   points as cartesian coordinates in that order.
    */
   [[nodiscard]] std::array<Point, 4> neighbors() const;
@@ -65,6 +66,11 @@ public:
   constexpr friend bool operator!=(const Point &lhs, const Point &rhs) {
     return !(lhs == rhs);
   }
+
+private:
+  /* ===================================================== Member Variables */
+  int x;
+  int y;
 }; // Point
 
 /* =========================================== Point Class Method Definitions */
@@ -93,18 +99,18 @@ class Rect {
 public:
   /* =========================================================== Constructors */
   constexpr explicit Rect(Point p) noexcept
-      : min_x{p.x}, max_x{p.x}, min_y{p.y}, max_y{p.y} {};
+      : min_x{p.get_x()}, max_x{p.get_x()}, min_y{p.get_y()}, max_y{
+                                                                  p.get_y()} {};
 
   constexpr Rect(int min_x, int max_x, int min_y, int max_y) noexcept
       : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
-  /* ======================================================= Member Variables */
-  int min_x;
-  int max_x;
-  int min_y;
-  int max_y;
-
   /* ========================================================== Class Methods */
+  [[nodiscard]] int get_min_x() const { return min_x; }
+  [[nodiscard]] int get_max_x() const { return max_x; }
+  [[nodiscard]] int get_min_y() const { return min_y; }
+  [[nodiscard]] int get_max_y() const { return max_y; }
+
   [[nodiscard]] constexpr int width() const { return max_x - min_x; }
   [[nodiscard]] constexpr int height() const { return max_y - min_y; }
 
@@ -124,23 +130,30 @@ public:
   }
 
   void expand_to_include(Point const &c);
+
+private:
+  /* ======================================================= Member Variables */
+  int min_x;
+  int max_x;
+  int min_y;
+  int max_y;
 }; // Rect
 
 void geom::Rect::expand_to_include(Point const &c) {
-  min_x = std::min(min_x, c.x);
-  max_x = std::max(max_x, c.x);
-  min_y = std::min(min_y, c.y);
-  max_y = std::max(max_y, c.y);
+  min_x = std::min(min_x, c.get_x());
+  max_x = std::max(max_x, c.get_x());
+  min_y = std::min(min_y, c.get_y());
+  max_y = std::max(max_y, c.get_y());
 }
 
 class RectIterator {
 public:
-  /* ============================================================ Constructor */
+  /* ========================================================== Constructor */
   RectIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  /* ========================================================== Class Methods */
-  [[nodiscard]] constexpr Point const &operator*() const { return current; };
+  /* ======================================================== Class Methods */
+  [[nodiscard]] Point const &operator*() const { return current; };
 
   RectIterator operator++();
 
@@ -152,15 +165,14 @@ public:
 
 private:
   Rect rect;
-  Point current = Point{rect.min_x, rect.min_y};
+  Point current = Point{rect.get_min_x(), rect.get_min_y()};
 }; // RectIterator
 
 geom::RectIterator geom::RectIterator::operator++() {
-  if (current.x < rect.max_x) {
-    ++current.x;
+  if (current.get_x() < rect.get_max_x()) {
+    current = Point{current.get_x() + 1, current.get_y()};
   } else {
-    current.x = rect.min_x;
-    ++current.y;
+    current = Point{rect.get_min_x(), current.get_y() + 1};
   }
 
   return *this;
@@ -199,29 +211,29 @@ private:
 };
 
 geom::PerimeterIterator geom::PerimeterIterator::begin() const {
-  return PerimeterIterator{rect, Point{rect.min_x, rect.min_y}};
+  return PerimeterIterator{rect, Point{rect.get_min_x(), rect.get_min_y()}};
 }
 
 geom::PerimeterIterator geom::PerimeterIterator::end() const {
-  return PerimeterIterator{rect, Point{rect.min_x, rect.max_y + 1}};
+  return PerimeterIterator{rect, Point{rect.get_min_x(), rect.get_max_y() + 1}};
 }
 
 geom::PerimeterIterator geom::PerimeterIterator::operator++() {
   // Top or bottom edges
-  if (current.y == rect.min_y || current.y == rect.max_y) {
-    if (current.x < rect.max_x) {
-      ++current.x;
+
+  if (current.get_y() == rect.get_min_y() ||
+      current.get_y() == rect.get_max_y()) {
+    if (current.get_x() < rect.get_max_x()) {
+      current = Point{current.get_x() + 1, current.get_y()};
     } else {
-      current.x = rect.min_x;
-      ++current.y;
+      current = Point{rect.get_min_x(), current.get_y() + 1};
     }
   } else {
     // Flip flop between vertical edges
-    if (current.x == rect.min_x) {
-      current.x = rect.max_x;
-    } else if (current.x == rect.max_x) {
-      current.x = rect.min_x;
-      ++current.y;
+    if (current.get_x() == rect.get_min_x()) {
+      current = Point{rect.get_max_x(), current.get_y()};
+    } else if (current.get_x() == rect.get_max_x()) {
+      current = Point{rect.get_min_x(), current.get_y() + 1};
     }
   }
 
@@ -234,19 +246,23 @@ geom::PerimeterIterator geom::Rect::perimeter() const {
 
 class Circle {
 public:
-  /* ============================================================ Constructor */
+  /* ========================================================== Constructor */
   constexpr Circle(Point o, int r) noexcept : origin{o}, radius{r} {};
 
-  /* ======================================================= Member Variables */
-  const Point origin;
-  const int radius;
+  /* ======================================================== Class Methods */
+  [[nodiscard]] Point get_origin() const { return origin; }
+  [[nodiscard]] int get_radius() const { return radius; }
 
-  /* ========================================================== Class Methods */
   [[nodiscard]] CircumferenceIterator circumference() const;
   [[nodiscard]] constexpr Rect bounding_box() const {
-    return Rect{origin.x - radius, origin.x + radius, origin.y - radius,
-                origin.y + radius};
+    return Rect{origin.get_x() - radius, origin.get_x() + radius,
+                origin.get_y() - radius, origin.get_y() + radius};
   }
+
+private:
+  /* ===================================================== Member Variables */
+  const Point origin;
+  const int radius;
 }; // Circle
 
 class CircumferenceIterator {
@@ -290,32 +306,32 @@ geom::CircumferenceIterator geom::CircumferenceIterator::begin() const {
 }
 
 geom::CircumferenceIterator geom::CircumferenceIterator::end() const {
-  const int end_dx = static_cast<int>(circle.radius / sqrt(2) + 1);
+  const int end_dx = static_cast<int>(circle.get_radius() / sqrt(2) + 1);
   return CircumferenceIterator{circle, end_dx};
 }
 
 geom::Point geom::CircumferenceIterator::operator*() const {
-  const int r = circle.radius;
+  const int r = circle.get_radius();
   const int dy = (int)sqrt(pow(r, 2) - pow(dx, 2));
 
-  geom::Point const &origin = circle.origin;
+  geom::Point const &origin = circle.get_origin();
   switch (octant) {
   case 0:
-    return Point{origin.x + dx, origin.y + dy};
+    return Point{origin.get_x() + dx, origin.get_y() + dy};
   case 1:
-    return Point{origin.x + dx, origin.y - dy};
+    return Point{origin.get_x() + dx, origin.get_y() - dy};
   case 2:
-    return Point{origin.x - dx, origin.y + dy};
+    return Point{origin.get_x() - dx, origin.get_y() + dy};
   case 3:
-    return Point{origin.x - dx, origin.y - dy};
+    return Point{origin.get_x() - dx, origin.get_y() - dy};
   case 4:
-    return Point{origin.x + dy, origin.y + dx};
+    return Point{origin.get_x() + dy, origin.get_y() + dx};
   case 5:
-    return Point{origin.x + dy, origin.y - dx};
+    return Point{origin.get_x() + dy, origin.get_y() - dx};
   case 6:
-    return Point{origin.x - dy, origin.y + dx};
+    return Point{origin.get_x() - dy, origin.get_y() + dx};
   case 7:
-    return Point{origin.x - dy, origin.y - dx};
+    return Point{origin.get_x() - dy, origin.get_y() - dx};
   default:
     assert(false);
   }
@@ -462,8 +478,9 @@ void saveButtons(std::string const &output_filename) {
 }
 
 img::pixel_class *get_pixel(geom::Point const &p) {
-  return (p.x >= 0 && p.x < screenx && p.y >= 0 && p.y < screeny)
-             ? &picture[p.y][p.x]
+  return (p.get_x() >= 0 && p.get_x() < screenx && p.get_y() >= 0 &&
+          p.get_y() < screeny)
+             ? &picture[p.get_y()][p.get_x()]
              : nullptr;
 }
 
