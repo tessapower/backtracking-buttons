@@ -144,8 +144,7 @@ public:
 
   RectIterator operator++();
 
-  friend constexpr bool operator!=(RectIterator const &lhs,
-                                   RectIterator const &rhs) {
+  friend bool operator!=(RectIterator const &lhs, RectIterator const &rhs) {
     return lhs.current != rhs.current;
   }
 
@@ -186,8 +185,8 @@ public:
 
   PerimeterIterator operator++();
 
-  friend constexpr bool operator!=(PerimeterIterator const &lhs,
-                                   PerimeterIterator const &rhs) {
+  friend bool operator!=(PerimeterIterator const &lhs,
+                         PerimeterIterator const &rhs) {
     return lhs.current != rhs.current;
   }
 
@@ -267,13 +266,13 @@ public:
   [[nodiscard]] value_type operator*() const;
   CircumferenceIterator operator++();
 
-  constexpr friend bool operator==(CircumferenceIterator const &lhs,
-                                   CircumferenceIterator const &rhs) {
+  friend bool operator==(CircumferenceIterator const &lhs,
+                         CircumferenceIterator const &rhs) {
     return lhs.dx == rhs.dx;
   }
 
-  constexpr friend bool operator!=(CircumferenceIterator const &lhs,
-                                   CircumferenceIterator const &rhs) {
+  friend bool operator!=(CircumferenceIterator const &lhs,
+                         CircumferenceIterator const &rhs) {
     return !(lhs == rhs);
   }
 

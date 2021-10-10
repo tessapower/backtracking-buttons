@@ -55,12 +55,11 @@ public:
       : rect{rect}, current{starting_point} {};
 
   /* ======================================================== Class Methods */
-  [[nodiscard]] constexpr Point const &operator*() const { return current; };
+  [[nodiscard]] Point const &operator*() const { return current; };
 
   RectIterator operator++();
 
-  friend constexpr bool operator!=(RectIterator const &lhs,
-                                   RectIterator const &rhs) {
+  friend bool operator!=(RectIterator const &lhs, RectIterator const &rhs) {
     return lhs.current != rhs.current;
   }
 
@@ -78,12 +77,12 @@ public:
       : rect{rect}, current{starting_point} {};
 
   /* ======================================================== Class Methods */
-  [[nodiscard]] constexpr Point const &operator*() const { return current; };
+  [[nodiscard]] Point const &operator*() const { return current; };
 
   PerimeterIterator operator++();
 
-  friend constexpr bool operator!=(PerimeterIterator const &lhs,
-                                   PerimeterIterator const &rhs) {
+  friend bool operator!=(PerimeterIterator const &lhs,
+                         PerimeterIterator const &rhs) {
     return lhs.current != rhs.current;
   }
 
