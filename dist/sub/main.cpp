@@ -19,6 +19,8 @@
 #include <string>
 #include <vector>
 
+// ⚠️ WARNING ⚠️
+// These global variables are part of the assignment starter code & can't be altered.
 int screenx, screeny, maxcolours; // you must use these
 
 // Setting this to true will visually color all test points in the output image.
@@ -384,17 +386,13 @@ using OptionalPointVecRef =
  * =============================================================================
  */
 namespace img {
-// TODO: Should I keep these here??? Any point??
-// void loadButtons();
-// void saveButtons(std::string const &output_filename);
-// bool is_part_of_button(geom::Point const &point);
-// void draw_point(geom::Point const &p, geom::Color const &color);
-// pixel_class *get_pixel(geom::Point const &p);
 
 /* =============================================================================
  *   pixel_class (class)
  * =============================================================================
  */
+// ⚠️ WARNING ⚠️
+// This class is part of the assignment starter code, so can't be altered.
 class pixel_class {
 private:
   int red, green, blue;
@@ -423,9 +421,14 @@ void img::pixel_class::datatofile(std::fstream &ppmfile) {
   ppmfile << " " << blue << "  ";
 }
 
-pixel_class picture[600][600]; // you must use this
+// ⚠️ WARNING ⚠️
+// This global variable is part of the assignment starter code, so can't be altered.
+pixel_class picture[600][600];
 
-// WARNING: This function cannot be altered & may exit the program!
+// ⚠️ WARNING ⚠️
+// This function is part of the assignment starter code, so can't be altered.
+// This function breaks the usual control flow & may exit the program, instead
+// of throwing an exception!
 void loadButtons() {
   // load the picture from Buttons.ppm
   int x, y, R, G, B;
@@ -611,7 +614,8 @@ int discover_num_button_holes(geom::Rect const &bounds) {
  */
 std::vector<geom::Rect> discover_all_button_bounds() {
   std::vector<geom::Rect> bounds_of_buttons;
-  const geom::Rect image_rect = geom::Rect{0, screenx - 1, 0, screeny - 1};
+  const geom::Rect image_rect =
+          geom::Rect{0, screenx - 1, 0, screeny - 1};
 
   for (auto const &point : image_rect) {
     auto px = img::get_pixel(point);
