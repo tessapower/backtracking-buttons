@@ -16,7 +16,6 @@ using PointPredicate = std::function<bool(geom::Point const &)>;
 using OptionalPointVecRef =
     std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
 
-// TODO: Document what each namespace contains
 namespace alg {
 /**
  * The primary function which will discover all buttons,

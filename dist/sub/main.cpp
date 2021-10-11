@@ -7,6 +7,23 @@
 // C++ Standard: C++17
 // clang++ -std=c++17 -o main main.cpp && ./main
 
+// Dear Marker,
+//
+// Please see the alg namespace (line 495) for the main functions that process
+// the image of the buttons, and in particular the recursive functions.
+//
+// Unfortunately due to the requirement of submitting a single .cpp file, this
+// project, which was neatly organised into easily understood and succint header
+// and source files, has now become an abomination. Due to the interdependent
+// nature of the classes and code, it's not possible to organise the classes in
+// a way that makes things easier to grasp as a whole. For that, I am truly
+// sorry!
+//
+// Realistically, we should be allowed (and encouraged) to submit a .zip of our
+// projects for assignments so that we might avoid creating such unreadable
+// programs that are unpleasant to mark. If things get too difficult, I can
+// always send a .zip of my project or a create a GitHub Gist. Best of luck!
+
 #include <array>
 #include <cassert>
 #include <cmath>
@@ -20,8 +37,9 @@
 #include <vector>
 
 // ⚠️ WARNING ⚠️
-// These global variables are part of the assignment starter code & can't be altered.
-int screenx, screeny, maxcolours; // you must use these
+// These global variables are part of the assignment starter code & can't be
+// altered.
+int screenx, screeny, maxcolours;
 
 // Setting this to true will visually color all test points in the output image.
 // This is useful to visualise the process of checking for broken buttons.
@@ -39,19 +57,10 @@ class RectIterator;
 class PerimeterIterator;
 class CircumferenceIterator;
 
-/* =============================================================================
- *   Point (class)
- * =============================================================================
- */
-/**
- * A point on a 2D Cartesian coordinate plane.
- */
 class Point {
 public:
-  /* ========================================================== Constructor */
   constexpr Point(int X, int Y) noexcept : x{X}, y{Y} {};
 
-  /* ======================================================== Class Methods */
   [[nodiscard]] int get_x() const { return x; }
   [[nodiscard]] int get_y() const { return y; }
 
@@ -70,12 +79,9 @@ public:
   }
 
 private:
-  /* ===================================================== Member Variables */
   int x;
   int y;
 }; // Point
-
-/* =========================================== Point Class Method Definitions */
 
 std::array<geom::Point, 4> geom::Point::neighbors() const {
   // We base the neighboring points on the graphics Cartesian Coordinate system
@@ -93,13 +99,8 @@ std::array<geom::Point, 4> geom::Point::neighbors() const {
   return std::array<Point, 4>{top, right, bottom, left};
 }
 
-/* =============================================================================
- *   Rect (class)
- * =============================================================================
- */
 class Rect {
 public:
-  /* =========================================================== Constructors */
   constexpr explicit Rect(Point p) noexcept
       : min_x{p.get_x()}, max_x{p.get_x()}, min_y{p.get_y()}, max_y{
                                                                   p.get_y()} {};
@@ -107,7 +108,6 @@ public:
   constexpr Rect(int min_x, int max_x, int min_y, int max_y) noexcept
       : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
-  /* ========================================================== Class Methods */
   [[nodiscard]] int get_min_x() const { return min_x; }
   [[nodiscard]] int get_max_x() const { return max_x; }
   [[nodiscard]] int get_min_y() const { return min_y; }
@@ -134,7 +134,6 @@ public:
   void expand_to_include(Point const &c);
 
 private:
-  /* ======================================================= Member Variables */
   int min_x;
   int max_x;
   int min_y;
@@ -150,11 +149,9 @@ void geom::Rect::expand_to_include(Point const &c) {
 
 class RectIterator {
 public:
-  /* ========================================================== Constructor */
   RectIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  /* ======================================================== Class Methods */
   [[nodiscard]] Point const &operator*() const { return current; };
 
   RectIterator operator++();
@@ -190,11 +187,9 @@ geom::RectIterator geom::Rect::end() const {
 
 class PerimeterIterator {
 public:
-  /* ============================================================ Constructor */
   constexpr PerimeterIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  /* ========================================================== Class Methods */
   [[nodiscard]] constexpr Point const &operator*() const { return current; };
 
   PerimeterIterator operator++();
@@ -248,10 +243,8 @@ geom::PerimeterIterator geom::Rect::perimeter() const {
 
 class Circle {
 public:
-  /* ========================================================== Constructor */
   constexpr Circle(Point o, int r) noexcept : origin{o}, radius{r} {};
 
-  /* ======================================================== Class Methods */
   [[nodiscard]] Point get_origin() const { return origin; }
   [[nodiscard]] int get_radius() const { return radius; }
 
@@ -262,7 +255,6 @@ public:
   }
 
 private:
-  /* ===================================================== Member Variables */
   const Point origin;
   const int radius;
 }; // Circle
@@ -276,11 +268,9 @@ public:
   using pointer = Point *;
   using reference = Point &;
 
-  /* ============================================================ Constructor */
   constexpr CircumferenceIterator(Circle const &c, int dx) noexcept
       : circle{c}, dx{dx} {};
 
-  /* ========================================================== Class Methods */
   [[nodiscard]] value_type operator*() const;
   CircumferenceIterator operator++();
 
@@ -351,22 +341,15 @@ geom::CircumferenceIterator geom::Circle::circumference() const {
   return CircumferenceIterator{*this, 0};
 }
 
-/* =============================================================================
- *   Color (class)
- * =============================================================================
- */
 class Color {
 public:
-  /* ============================================================ Constructor */
   constexpr Color(uint8_t r, uint8_t g, uint8_t b) noexcept
       : R{r}, G{g}, B{b} {};
 
-  /* ======================================================= Member Variables */
   const uint8_t R;
   const uint8_t G;
   const uint8_t B;
 
-  /* ======================================================== Class Methods */
   constexpr static Color Red() { return Color{255, 0, 0}; }
   constexpr static Color EmeraldGreen() { return Color{0, 204, 102}; }
   constexpr static Color AzureBlue() { return Color{0, 127, 255}; }
@@ -374,7 +357,6 @@ public:
 
 } // namespace geom
 
-/* ============================================================= Custom Types */
 using PointPredicate = std::function<bool(geom::Point const &)>;
 using OptionalPointVecRef =
     std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
@@ -386,11 +368,6 @@ using OptionalPointVecRef =
  * =============================================================================
  */
 namespace img {
-
-/* =============================================================================
- *   pixel_class (class)
- * =============================================================================
- */
 // ⚠️ WARNING ⚠️
 // This class is part of the assignment starter code, so can't be altered.
 class pixel_class {
@@ -407,8 +384,6 @@ public:
   bool getexclude() { return exclude; }
 };
 
-/* ===================================== pixel_class Class Method Definitions */
-
 void img::pixel_class::loaddata(int v1, int v2, int v3) {
   red = v1;
   green = v2;
@@ -422,7 +397,8 @@ void img::pixel_class::datatofile(std::fstream &ppmfile) {
 }
 
 // ⚠️ WARNING ⚠️
-// This global variable is part of the assignment starter code, so can't be altered.
+// This global variable is part of the assignment starter code, so can't be
+// altered.
 pixel_class picture[600][600];
 
 // ⚠️ WARNING ⚠️
@@ -614,8 +590,7 @@ int discover_num_button_holes(geom::Rect const &bounds) {
  */
 std::vector<geom::Rect> discover_all_button_bounds() {
   std::vector<geom::Rect> bounds_of_buttons;
-  const geom::Rect image_rect =
-          geom::Rect{0, screenx - 1, 0, screeny - 1};
+  const geom::Rect image_rect = geom::Rect{0, screenx - 1, 0, screeny - 1};
 
   for (auto const &point : image_rect) {
     auto px = img::get_pixel(point);
@@ -646,7 +621,8 @@ std::vector<geom::Rect> discover_all_button_bounds() {
  * image. The image will contain the buttons with red boxes
  * to indicate broken buttons, or otherwise green for OK.
  *
- * Set DEBUG_VISUALIZATIONS to true to enable debug visualizations.
+ * Set DEBUG_VISUALIZATIONS to true to enable debug visualizations and see
+ * what the algorithms have discovered/determined about each button.
  */
 void process_image() {
   for (auto const &bounds : alg::discover_all_button_bounds()) {
