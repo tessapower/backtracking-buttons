@@ -14,7 +14,6 @@ class PerimeterIterator;
 
 class Rect {
 public:
-  /* ========================================================= Constructors */
   constexpr explicit Rect(Point p) noexcept
       : min_x{p.get_x()}, max_x{p.get_x()}, min_y{p.get_y()}, max_y{
                                                                   p.get_y()} {};
@@ -22,7 +21,6 @@ public:
   constexpr Rect(int min_x, int max_x, int min_y, int max_y) noexcept
       : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
-  /* ======================================================== Class Methods */
   [[nodiscard]] int get_min_x() const { return min_x; }
   [[nodiscard]] int get_max_x() const { return max_x; }
   [[nodiscard]] int get_min_y() const { return min_y; }
@@ -49,7 +47,6 @@ public:
   void expand_to_include(Point const &c);
 
 private:
-  /* ===================================================== Member Variables */
   int min_x;
   int max_x;
   int min_y;
@@ -58,11 +55,9 @@ private:
 
 class RectIterator {
 public:
-  /* ========================================================== Constructor */
   RectIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  /* ======================================================== Class Methods */
   [[nodiscard]] Point const &operator*() const { return current; };
 
   RectIterator operator++();
@@ -80,11 +75,9 @@ private:
 
 class PerimeterIterator {
 public:
-  /* ========================================================== Constructor */
   constexpr PerimeterIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  /* ======================================================== Class Methods */
   [[nodiscard]] Point const &operator*() const { return current; };
 
   PerimeterIterator operator++();
