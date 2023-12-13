@@ -1,29 +1,15 @@
-cmake_minimum_required(VERSION 3.20)
-project(a3)
+cmake_minimum_required(VERSION 3.25)
 
-set(CMAKE_CXX_STANDARD 17)
+project(backtracking_buttons)
+set(CMAKE_CXX_STANDARD 20)
 
-include_directories(include)
-set(SOURCES
-        src/algorithms.cpp
-        src/circle.cpp
-        src/point.cpp
-        src/img.cpp
-        src/pixel_class.cpp
-        src/rect.cpp
-        src/statics.cpp
-        )
+include(FetchContent)
 
-set(HEADERS
-        include/algorithms.h
-        include/circle.h
-        include/color.h
-        include/point.h
-        include/img.h
-        include/pixel_class.h
-        include/rect.h
-        include/statics.h
-        )
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+    set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+    include(CTest)
+endif()
 
-add_executable(main ${SOURCES} ${HEADERS} bin/main.cpp)
-
+add_subdirectory(bin)
+add_subdirectory(src)
