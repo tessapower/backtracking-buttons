@@ -4,8 +4,7 @@
 #include <optional>
 #include <vector>
 
-#include "point.h"
-#include "statics.h"
+#include <geom/point.h>
 
 namespace geom {
 
@@ -13,14 +12,16 @@ class RectIterator;
 class PerimeterIterator;
 
 class Rect {
-public:
+ public:
+  /* ========================================================= Constructors */
   constexpr explicit Rect(Point p) noexcept
       : min_x{p.get_x()}, max_x{p.get_x()}, min_y{p.get_y()}, max_y{
-                                                                  p.get_y()} {};
+      p.get_y()} {};
 
   constexpr Rect(int min_x, int max_x, int min_y, int max_y) noexcept
       : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
+  /* ======================================================== Class Methods */
   [[nodiscard]] int get_min_x() const { return min_x; }
   [[nodiscard]] int get_max_x() const { return max_x; }
   [[nodiscard]] int get_min_y() const { return min_y; }
@@ -40,13 +41,14 @@ public:
 
   [[nodiscard]] constexpr bool is_fully_enclosed_by(Rect const &other) const {
     return this->min_x > other.min_x &&
-           this->max_x<other.max_x &&this->min_y> other.min_y &&
-           this->max_y < other.max_y;
+        this->max_x<other.max_x &&this->min_y> other.min_y &&
+        this->max_y < other.max_y;
   }
 
   void expand_to_include(Point const &c);
 
-private:
+ private:
+  /* ===================================================== Member Variables */
   int min_x;
   int max_x;
   int min_y;
@@ -54,10 +56,12 @@ private:
 };
 
 class RectIterator {
-public:
+ public:
+  /* ========================================================== Constructor */
   RectIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
+  /* ======================================================== Class Methods */
   [[nodiscard]] Point const &operator*() const { return current; };
 
   RectIterator operator++();
@@ -68,16 +72,18 @@ public:
 
   friend Rect;
 
-private:
+ private:
   Rect rect;
   Point current = Point{rect.get_min_x(), rect.get_min_y()};
 };
 
 class PerimeterIterator {
-public:
+ public:
+  /* ========================================================== Constructor */
   constexpr PerimeterIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
+  /* ======================================================== Class Methods */
   [[nodiscard]] Point const &operator*() const { return current; };
 
   PerimeterIterator operator++();
@@ -90,7 +96,7 @@ public:
   [[nodiscard]] PerimeterIterator begin() const;
   [[nodiscard]] PerimeterIterator end() const;
 
-private:
+ private:
   Rect rect;
   Point current;
 };

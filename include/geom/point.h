@@ -9,7 +9,7 @@ namespace geom {
  * A point on a 2D Cartesian coordinate plane.
  */
 class Point {
-public:
+ public:
   /* ========================================================== Constructor */
   constexpr Point(int X, int Y) noexcept : x{X}, y{Y} {};
 
@@ -31,7 +31,7 @@ public:
     return !(lhs == rhs);
   }
 
-private:
+ private:
   /* ===================================================== Member Variables */
   int x;
   int y;

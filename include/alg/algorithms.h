@@ -6,15 +6,16 @@
 #include <string>
 #include <vector>
 
-#include "circle.h"
-#include "color.h"
-#include "pixel_class.h"
-#include "point.h"
-#include "rect.h"
+#include <geom/circle.h>
+#include <geom/color.h>
+#include <geom/point.h>
+#include <geom/rect.h>
+#include <img/pixel.h>
+#include <img/scan.h>
 
 using PointPredicate = std::function<bool(geom::Point const &)>;
 using OptionalPointVecRef =
-    std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
+        std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
 
 namespace alg {
 /**
@@ -25,14 +26,14 @@ namespace alg {
  *
  * Set DEBUG_VISUALIZATIONS to true to enable debug visualizations.
  */
-void process_image();
+    void process_image();
 
 /**
  * Discovers all the bounding boxes for the buttons. It does not categorize
  * the buttons as broken or not broken.
  * @return A vector containing the bounds of all the buttons in the image.
  */
-std::vector<geom::Rect> discover_all_button_bounds();
+    std::vector<geom::Rect> discover_all_button_bounds();
 
 /**
  * Discovers the extent of points that are deemed connected to the given point.
@@ -44,12 +45,12 @@ std::vector<geom::Rect> discover_all_button_bounds();
  * @param[out] discovered_points An optional vector which, if provided, will
  * be filled with all discovered points.
  */
-void discover_extent_of_connected_points(
-    geom::Point const &point, geom::Rect &discovered_extent,
-    PointPredicate const &pred_fn,
-    OptionalPointVecRef discovered_points = std::nullopt);
+    void discover_extent_of_connected_points(
+            geom::Point const &point, geom::Rect &discovered_extent,
+            PointPredicate const &pred_fn,
+            OptionalPointVecRef discovered_points = std::nullopt);
 
-int discover_num_button_holes(geom::Rect const &bounds);
+    int discover_num_button_holes(geom::Rect const &bounds);
 
 } // namespace alg
 

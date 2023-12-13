@@ -3,15 +3,16 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <geom/color.h>
 #include <iostream>
 
 namespace img {
 
 class pixel_class {
-private:
+ private:
   int red, green, blue;
   bool exclude; // if true, do not check this pixel
-public:
+ public:
   void loaddata(int v1, int v2, int v3);
   void datatofile(std::fstream &ppmfile);
   int getR() const { return red; }

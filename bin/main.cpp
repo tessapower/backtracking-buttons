@@ -5,8 +5,7 @@
 
 #include <cstdlib>
 
-#include "algorithms.h"
-#include "img.h"
+#include <alg/algorithms.h>
 
 const std::string kOutputFilename = "Buttons_processed.ppm";
 
