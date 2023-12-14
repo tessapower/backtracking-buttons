@@ -13,7 +13,7 @@
 #include <img/pixel.h>
 #include <img/scan.h>
 
-using PointPredicate = std::function<bool(geom::Point const &)>;
+using PixelPredicate = std::function<bool(img::Pixel const &)>;
 using OptionalPointVecRef =
         std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
 
@@ -35,6 +35,8 @@ namespace alg {
  */
     std::vector<geom::Rect> discover_all_button_bounds();
 
+auto is_part_of_button(img::Pixel const &pixel) noexcept -> bool;
+
 /**
  * Discovers the extent of points that are deemed connected to the given point.
  * @param[in] point The point to start discovering from.
@@ -45,10 +47,10 @@ namespace alg {
  * @param[out] discovered_points An optional vector which, if provided, will
  * be filled with all discovered points.
  */
-    void discover_extent_of_connected_points(
-            geom::Point const &point, geom::Rect &discovered_extent,
-            PointPredicate const &pred_fn,
-            OptionalPointVecRef discovered_points = std::nullopt);
+auto discover_extent_of_connected_points(
+    geom::Point const &point,
+    geom::Rect &discovered_extent, PixelPredicate const &pred_fn,
+    OptionalPointVecRef discovered_points = std::nullopt) -> void;
 
     int discover_num_button_holes(geom::Rect const &bounds);
 

@@ -74,6 +74,13 @@ std::vector<geom::Rect> alg::discover_all_button_bounds() {
 
             bounds_of_buttons.emplace_back(discovered_extent);
         }
+    if (did_discover_new_button) {
+      // Initialize our bounds to a 0-by-0 box which discover_bounds expands
+      geom::Rect discovered_extent{point};
+      alg::discover_extent_of_connected_points(
+          point, discovered_extent, [&](img::Pixel const &px) {
+            return alg::is_part_of_button(px);
+          });
 
         px->setexclude(true);
     }
@@ -81,29 +88,34 @@ std::vector<geom::Rect> alg::discover_all_button_bounds() {
     return bounds_of_buttons;
 }
 
+auto alg::is_part_of_button(img::Pixel const &pixel) noexcept -> bool {
+  return pixel.red() > 128;
+}
+
 // The discovered_points parameter is optional; if provided, it will be filled
 // with all points discovered while searching for the extent of connected points
-void alg::discover_extent_of_connected_points(
-        geom::Point const &point, geom::Rect &discovered_extent,
-        PointPredicate const &pred_fn, OptionalPointVecRef discovered_points) {
-    auto px = img::get_pixel(point);
-    if (!px || px->getexclude() || !pred_fn(point)) {
-        return;
-    }
+auto alg::discover_extent_of_connected_points(
+    geom::Point const &point,
+    geom::Rect &discovered_extent, PixelPredicate const &pred_fn,
+    OptionalPointVecRef discovered_points) -> void {
+  auto pixel = img::get_pixel(point);
+  if (pixel.visited() || !pred_fn(pixel)) {
+    return;
+  }
 
-    // Tracking discovered points is optional so points are only appended to the
-    // vector if a vector is provided
-    if (discovered_points) {
-        discovered_points->get().emplace_back(point);
-    }
+  // Tracking discovered points is optional so points are only appended to the
+  // vector if a vector is provided
+  if (discovered_points)
+    discovered_points->get().emplace_back(point);
 
-    px->setexclude(true);
-    discovered_extent.expand_to_include(point);
+  pixel.visited(true);
 
-    for (auto const &p : point.neighbors()) {
-        discover_extent_of_connected_points(p, discovered_extent, pred_fn,
-                                            discovered_points);
-    }
+  discovered_extent.expand_to_include(point);
+
+  for (auto const &p : point.neighbors()) {
+    discover_extent_of_connected_points(p, discovered_extent, pred_fn,
+                                        discovered_points);
+  }
 }
 
 /**
