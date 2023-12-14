@@ -38,21 +38,21 @@ void alg::process_image() {
                      kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
-        for (auto const &point : outer_circumference) {
+    for (auto const &point : outer_circumference) {
       img::draw_point(point, geom::Color::AzureBlue());
     }
+
     for (auto const &point : inner_circumference) {
       img::draw_point(point, geom::Color::AzureBlue());
     }
 #endif
 
-        geom::Color status_color =
-                is_broken ? geom::Color::Red() : geom::Color::EmeraldGreen();
-        for (auto const &point : bounds.perimeter()) {
-            img::draw_point(point, status_color);
-        }
+    geom::Color status_color =
+        is_broken ? geom::Color::Red() : geom::Color::EmeraldGreen();
+    for (auto const &point : bounds.perimeter()) {
+      img::draw_point(point, status_color);
     }
-}
+  }
 
 std::vector<geom::Rect> alg::discover_all_button_bounds() {
     std::vector<geom::Rect> bounds_of_buttons;
@@ -144,27 +144,27 @@ int alg::discover_num_button_holes(geom::Rect const &bounds) {
 
         if (did_discover_new_empty_area) {
 #if DEBUG_VISUALIZATIONS
-            std::vector<geom::Point> discovered_points{};
+      std::vector<geom::Point> discovered_points{};
 #endif
-            geom::Rect discovered_extent = geom::Rect{point};
+      geom::Rect discovered_extent = geom::Rect{point};
 
             discover_extent_of_connected_points(
                     point, discovered_extent,
                     [](geom::Point const &p) { return !img::is_part_of_button(p); }
 #if DEBUG_VISUALIZATIONS
-                    ,
+          ,
           discovered_points
 #endif
-            );
+      );
 
-            // If the connected pixels touch the bounds, then the empty area
-            // discovered isn't a fully enclosed buttonhole. Conversely, if it
-            // was then we have found a buttonhole.
-            if (discovered_extent.is_fully_enclosed_by(bounds)) {
-                num_btn_holes++;
+      // If the connected pixels touch the bounds, then the empty area
+      // discovered isn't a fully enclosed buttonhole. Conversely, if it
+      // was then we have found a buttonhole.
+      if (discovered_extent.is_fully_enclosed_by(bounds)) {
+        num_btn_holes++;
 
 #if DEBUG_VISUALIZATIONS
-                for (auto const &p : discovered_points) {
+        for (auto const &p : discovered_points) {
           img::draw_point(p, geom::Color::AzureBlue());
         }
 #endif

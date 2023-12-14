@@ -7,100 +7,100 @@
 #include <geom/point.h>
 
 namespace geom {
-
 class RectIterator;
 class PerimeterIterator;
 
+/**
+ * A rectangle on a 2D Cartesian coordinate plane.
+ */
 class Rect {
- public:
-  /* ========================================================= Constructors */
-  constexpr explicit Rect(Point p) noexcept
-      : min_x{p.get_x()}, max_x{p.get_x()}, min_y{p.get_y()}, max_y{
-      p.get_y()} {};
+public:
+  explicit Rect(Point p) noexcept
+      : min_x{p.x()}, max_x{p.x()}, min_y{p.y()},
+        max_y{p.y()} {};
 
   constexpr Rect(int min_x, int max_x, int min_y, int max_y) noexcept
       : min_x{min_x}, max_x{max_x}, min_y{min_y}, max_y{max_y} {};
 
-  /* ======================================================== Class Methods */
-  [[nodiscard]] int get_min_x() const { return min_x; }
-  [[nodiscard]] int get_max_x() const { return max_x; }
-  [[nodiscard]] int get_min_y() const { return min_y; }
-  [[nodiscard]] int get_max_y() const { return max_y; }
+  [[nodiscard]] auto get_min_x() const -> int { return min_x; }
+  [[nodiscard]] auto get_max_x() const -> int { return max_x; }
+  [[nodiscard]] auto get_min_y() const -> int { return min_y; }
+  [[nodiscard]] auto get_max_y() const -> int { return max_y; }
 
-  [[nodiscard]] constexpr int width() const { return max_x - min_x; }
-  [[nodiscard]] constexpr int height() const { return max_y - min_y; }
+  [[nodiscard]] constexpr auto width() const -> int { return max_x - min_x; }
+  [[nodiscard]] constexpr auto height() const -> int { return max_y - min_y; }
 
-  [[nodiscard]] PerimeterIterator perimeter() const;
+  [[nodiscard]] auto perimeter() const -> PerimeterIterator;
 
-  [[nodiscard]] RectIterator begin() const;
-  [[nodiscard]] RectIterator end() const;
+  [[nodiscard]] auto begin() const -> RectIterator;
+  [[nodiscard]] auto end() const -> RectIterator;
 
-  [[nodiscard]] constexpr Point center() const {
+  [[nodiscard]] constexpr auto center() const -> Point {
     return Point{(max_x + min_x) / 2, (max_y + min_y) / 2};
   }
 
-  [[nodiscard]] constexpr bool is_fully_enclosed_by(Rect const &other) const {
+  [[nodiscard]] constexpr auto is_fully_enclosed_by(Rect const &other) const
+      -> bool {
     return this->min_x > other.min_x &&
-        this->max_x<other.max_x &&this->min_y> other.min_y &&
-        this->max_y < other.max_y;
+           this->max_x<other.max_x &&this->min_y> other.min_y &&
+           this->max_y < other.max_y;
   }
 
-  void expand_to_include(Point const &c);
+  auto expand_to_include(Point const &c) -> void;
 
- private:
-  /* ===================================================== Member Variables */
+private:
   int min_x;
   int max_x;
   int min_y;
   int max_y;
 };
 
+/**
+ * An iterator which iterates over all points in a rectangle, from top to bottom
+ * and left to right.
+ */
 class RectIterator {
- public:
-  /* ========================================================== Constructor */
+public:
   RectIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  /* ======================================================== Class Methods */
-  [[nodiscard]] Point const &operator*() const { return current; };
+  [[nodiscard]] auto operator*() const -> const Point & { return current; };
 
-  RectIterator operator++();
+  auto operator++() -> RectIterator;
 
-  friend bool operator!=(RectIterator const &lhs, RectIterator const &rhs) {
+  friend auto operator!=(RectIterator const &lhs, RectIterator const &rhs)
+      -> bool {
     return lhs.current != rhs.current;
   }
 
   friend Rect;
 
- private:
+private:
   Rect rect;
   Point current = Point{rect.get_min_x(), rect.get_min_y()};
 };
 
 class PerimeterIterator {
- public:
-  /* ========================================================== Constructor */
+public:
   constexpr PerimeterIterator(Rect const &rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  /* ======================================================== Class Methods */
-  [[nodiscard]] Point const &operator*() const { return current; };
+  [[nodiscard]] auto operator*() const -> const Point & { return current; };
 
-  PerimeterIterator operator++();
+  auto operator++() -> PerimeterIterator;
 
-  friend bool operator!=(PerimeterIterator const &lhs,
-                         PerimeterIterator const &rhs) {
+  friend auto operator!=(PerimeterIterator const &lhs,
+                         PerimeterIterator const &rhs) -> bool {
     return lhs.current != rhs.current;
   }
 
-  [[nodiscard]] PerimeterIterator begin() const;
-  [[nodiscard]] PerimeterIterator end() const;
+  [[nodiscard]] auto begin() const -> PerimeterIterator;
+  [[nodiscard]] auto end() const -> PerimeterIterator;
 
- private:
-  Rect rect;
+private:
+  Rect const &rect;
   Point current;
 };
-
 } // namespace geom
 
 #endif // RECT_H

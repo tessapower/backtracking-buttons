@@ -1,7 +1,7 @@
 #include "point.h"
 #include <array>
 
-std::array<geom::Point, 4> geom::Point::neighbors() const {
+auto geom::Point::neighbors() const -> std::array<geom::Point, 4> {
   // We base the neighboring points on the graphics Cartesian Coordinate system
   // with the origin starting in the top left corner [0, 0].
   // x increases horizontally to the right, y increases vertically down.
@@ -9,10 +9,10 @@ std::array<geom::Point, 4> geom::Point::neighbors() const {
   // (Left) [x-1, y  ] [x  , y  ] [x+1, y  ] (Right)
   //                   [x  , y+1] (Bottom)
   //
-  Point top{x, y - 1};
-  Point right{x + 1, y};
-  Point bottom{x, y + 1};
-  Point left{x - 1, y};
+  Point top{_x, _y - 1};
+  Point right{_x + 1, _y};
+  Point bottom{_x, _y + 1};
+  Point left{_x - 1, _y};
 
   return std::array<Point, 4>{top, right, bottom, left};
 }

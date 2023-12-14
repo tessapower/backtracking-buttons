@@ -15,7 +15,7 @@
 
 using PixelPredicate = std::function<bool(img::Pixel const &)>;
 using OptionalPointVecRef =
-        std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
+    std::optional<std::reference_wrapper<std::vector<geom::Point>>>;
 
 namespace alg {
 /**
@@ -31,6 +31,7 @@ namespace alg {
 /**
  * Discovers all the bounding boxes for the buttons. It does not categorize
  * the buttons as broken or not broken.
+ *
  * @return A vector containing the bounds of all the buttons in the image.
  */
     std::vector<geom::Rect> discover_all_button_bounds();
@@ -39,6 +40,7 @@ auto is_part_of_button(img::Pixel const &pixel) noexcept -> bool;
 
 /**
  * Discovers the extent of points that are deemed connected to the given point.
+ *
  * @param[in] point The point to start discovering from.
  * @param[in, out] discovered_extent A Rect which will be grown to fit all the
  * connected points as they are discovered.

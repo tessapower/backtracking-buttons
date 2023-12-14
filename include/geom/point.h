@@ -4,39 +4,34 @@
 #include <array>
 
 namespace geom {
-
 /**
  * A point on a 2D Cartesian coordinate plane.
  */
 class Point {
- public:
-  /* ========================================================== Constructor */
-  constexpr Point(int X, int Y) noexcept : x{X}, y{Y} {};
+public:
+  constexpr Point(int x, int y) noexcept : _x{x}, _y{y} {};
 
-  /* ======================================================== Class Methods */
-  [[nodiscard]] int get_x() const { return x; }
-  [[nodiscard]] int get_y() const { return y; }
+  [[nodiscard]] auto x() const -> int { return _x; }
+  [[nodiscard]] auto y() const -> int { return _y; }
 
   /**
    * @return Array containing the neighboring top, right, bottom, and left
-   *   points as cartesian coordinates in that order.
+   *   points as cartesian coordinates, in that order.
    */
-  [[nodiscard]] std::array<Point, 4> neighbors() const;
+  [[nodiscard]] auto neighbors() const -> std::array<Point, 4>;
 
-  constexpr friend bool operator==(const Point &lhs, const Point &rhs) {
-    return lhs.x == rhs.x && lhs.y == rhs.y;
+  constexpr friend auto operator==(const Point &lhs, const Point &rhs) -> bool {
+    return lhs._x == rhs._x && lhs._y == rhs._y;
   }
 
-  constexpr friend bool operator!=(const Point &lhs, const Point &rhs) {
+  constexpr friend auto operator!=(const Point &lhs, const Point &rhs) -> bool {
     return !(lhs == rhs);
   }
 
- private:
-  /* ===================================================== Member Variables */
-  int x;
-  int y;
+private:
+  int _x;
+  int _y;
 };
-
 } // namespace geom
 
 #endif // POINT_H
