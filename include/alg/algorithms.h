@@ -26,7 +26,7 @@ namespace alg {
  *
  * Set DEBUG_VISUALIZATIONS to true to enable debug visualizations.
  */
-    void process_image();
+auto process_scan(img::Scan const &scan) -> img::Scan;
 
 /**
  * Discovers all the bounding boxes for the buttons. It does not categorize
@@ -34,7 +34,7 @@ namespace alg {
  *
  * @return A vector containing the bounds of all the buttons in the image.
  */
-    std::vector<geom::Rect> discover_all_button_bounds();
+auto discover_all_button_bounds(img::Scan &scan) -> std::vector<geom::Rect>;
 
 auto is_part_of_button(img::Pixel const &pixel) noexcept -> bool;
 
@@ -50,11 +50,18 @@ auto is_part_of_button(img::Pixel const &pixel) noexcept -> bool;
  * be filled with all discovered points.
  */
 auto discover_extent_of_connected_points(
-    geom::Point const &point,
+    const img::Scan &scan, geom::Point const &point,
     geom::Rect &discovered_extent, PixelPredicate const &pred_fn,
     OptionalPointVecRef discovered_points = std::nullopt) -> void;
 
-    int discover_num_button_holes(geom::Rect const &bounds);
+/**
+ * @brief Discovers the number of buttonholes in the given bounds.
+ *
+ * @param bounds Pass the bounds of the inner circumference of a button to
+ *  assess the button without including the edges.
+ */
+auto discover_num_button_holes(img::Scan &scan, geom::Rect const &bounds)
+    -> int;
 
 } // namespace alg
 

@@ -1,18 +1,19 @@
 // Styleguide: Google C++ Style Guidelines
 // https://google.github.io/styleguide/cppguide.html
-// C++ Standard: C++17
-// clang++ -std=c++17 -o main main.cpp && ./main
 
 #include <cstdlib>
 
 #include <alg/algorithms.h>
+#include <img/scan.h>
 
-const std::string kOutputFilename = "Buttons_processed.ppm";
+const std::string kInputFilename = PPM_FILES + std::string{"buttons.ppm"};
+const std::string kOutputFilename =
+    PPM_FILES + std::string{"buttons_processed.ppm"};
 
 int main() {
-  img::loadButtons();
-  alg::process_image();
-  img::saveButtons(kOutputFilename);
+  auto scan = img::Scan{kInputFilename};
+  auto processed_scan = alg::process_scan(scan);
+  processed_scan.save_ppm_file(kOutputFilename);
 
   return EXIT_SUCCESS;
 }
