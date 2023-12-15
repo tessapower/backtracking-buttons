@@ -31,14 +31,14 @@ auto alg::process_scan(img::Scan const& scan) -> img::Scan {
 
     is_broken |= std::any_of(outer_circumference.begin(),
                              outer_circumference.end(), [&](auto pt) {
-                               auto pixel = output_scan.get_pixel(pt);
-                               return alg::is_part_of_button(pixel);
+                               auto px = output_scan.get_pixel(pt);
+                               return px && alg::is_part_of_button(px->get());
                              });
 
     is_broken |= std::any_of(inner_circumference.begin(),
                              inner_circumference.end(), [&](auto pt) {
-                               auto pixel = output_scan.get_pixel(pt);
-                               return !alg::is_part_of_button(pixel);
+                               auto px = output_scan.get_pixel(pt);
+                               return !px || !alg::is_part_of_button(px->get());
                              });
 
     is_broken |= alg::discover_num_button_holes(output_scan, inner.bounding_box()) !=
@@ -56,9 +56,10 @@ auto alg::process_scan(img::Scan const& scan) -> img::Scan {
 
     geom::Color status_color =
         is_broken ? geom::Color::Red() : geom::Color::EmeraldGreen();
-    for (auto const &point : bounds.perimeter()) {
-      auto pixel = output_scan.get_pixel(point);
-      pixel.change_color(status_color);
+    for (auto const& point : bounds.perimeter()) {
+      if (auto px = output_scan.get_pixel(point)) {
+        px->get().change_color(status_color);
+      }
     }
   }
 
@@ -71,8 +72,10 @@ auto alg::discover_all_button_bounds(img::Scan& scan)
   const geom::Rect scan_rect =
       geom::Rect{0, scan.screen_x() - 1, 0, scan.screen_y() - 1};
 
-  for (auto const &point : scan_rect) {
-    auto pixel = scan.get_pixel(point);
+  for (auto const& point : scan_rect) {
+    auto px = scan.get_pixel(point);
+    if (!px) continue;
+    auto& pixel = px->get();
 
     const bool did_discover_new_button =
         is_part_of_button(pixel) && !pixel.visited();
@@ -104,7 +107,10 @@ auto alg::discover_extent_of_connected_points(
     img::Scan& scan, geom::Point const& point,
     geom::Rect& discovered_extent, PixelPredicate const& pred_fn,
     OptionalPointVecRef discovered_points) -> void {
-  auto pixel = scan.get_pixel(point);
+  auto px = scan.get_pixel(point);
+  if (!px) return;
+  auto& pixel = px->get();
+
   if (pixel.visited() || !pred_fn(pixel)) {
     return;
   }
@@ -130,13 +136,16 @@ auto alg::discover_num_button_holes(img::Scan& scan, geom::Rect const& bounds)
 
   // Iterate over the pixels within the bounding box of the button and flip
   // their exclude status. Then the pixels are in a "clean" slate.
-  for (auto const &point : bounds) {
-    auto pixel = scan.get_pixel(point);
-    pixel.visited(false);
+  for (auto const& point : bounds) {
+    if (auto px = scan.get_pixel(point)) {
+      px->get().visited(false);
+    }
   }
 
-  for (auto const &point : bounds) {
-    auto pixel = scan.get_pixel(point);
+  for (auto const& point : bounds) {
+    auto px = scan.get_pixel(point);
+    if (!px) continue;
+    auto& pixel = px->get();
 
     const bool did_discover_new_empty_area =
         !alg::is_part_of_button(pixel) && !pixel.visited();

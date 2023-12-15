@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include <array>
+#include <ostream>
 
 namespace geom {
 /**
@@ -26,6 +27,12 @@ public:
 
   constexpr friend auto operator!=(Point const& lhs, Point const& rhs) -> bool {
     return !(lhs == rhs);
+  }
+
+  friend auto operator<<(std::ostream& os, Point const& point) -> std::ostream& {
+    os << "x: " << point.x() << ", y: " << point.y();
+
+    return os;
   }
 
 private:

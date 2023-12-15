@@ -1,10 +1,8 @@
 #ifndef PIXEL_H
 #define PIXEL_H
 
-#include <cstdlib>
-#include <fstream>
 #include <geom/color.h>
-#include <iostream>
+#include <ostream>
 
 namespace img {
 /**
@@ -30,14 +28,14 @@ public:
   /**
    * @brief The green component of this pixel.
    */
-  [[maybe_unused]] [[nodiscard]] auto green() const noexcept -> int {
+  [[nodiscard]] auto green() const noexcept -> int {
     return _green;
   }
 
   /**
    * @brief The blue component of this pixel.
    */
-  [[maybe_unused]] [[nodiscard]] auto blue() const noexcept -> int {
+  [[nodiscard]] auto blue() const noexcept -> int {
     return _blue;
   }
 

@@ -1,12 +1,18 @@
 #ifndef SCAN_H
 #define SCAN_H
 
+#include <functional>
 #include <geom/point.h>
 #include <img/pixel.h>
+#include <optional>
 #include <string>
 #include <vector>
 
 namespace img {
+
+using MaybePixel = std::optional<std::reference_wrapper<img::Pixel>>;
+using MaybeConstPixel = std::optional<std::reference_wrapper<img::Pixel const>>;
+
 class Scan {
 public:
   explicit Scan(std::string const& input_filename) {

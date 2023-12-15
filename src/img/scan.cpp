@@ -1,24 +1,34 @@
 #include "img/scan.h"
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
-auto img::Scan::get_pixel(geom::Point const& point) const -> img::Pixel const
-    & {
+auto img::Scan::get_pixel(geom::Point const& point) const -> img::MaybeConstPixel {
   int x = point.x();
   int y = point.y();
   if (x >= 0 && x < _screen_x && y >= 0 && y < _screen_y) {
     return _pixel_data[y][x];
   }
 
-  throw std::runtime_error("Pixel out of bounds");
+  return std::nullopt;
 }
 
-auto img::Scan::load_ppm_file(const std::string &input_filename) -> void {
+auto img::Scan::get_pixel(geom::Point const& point) -> img::MaybePixel {
+  int x = point.x();
+  int y = point.y();
+  if (x >= 0 && x < _screen_x && y >= 0 && y < _screen_y) {
+    return _pixel_data[y][x];
+  }
+
+  return std::nullopt;
+}
+
+auto img::Scan::load_ppm_file(std::string const& input_filename) -> void {
   std::fstream input_file;
   std::string line;
   input_file.open(input_filename.c_str(), std::fstream::in);
   if (!input_file.is_open()) {
-    throw std::runtime_error("Unable to open file" + input_filename);
+    throw std::runtime_error("Unable to open file: " + input_filename);
   }
 
   // Read the header
