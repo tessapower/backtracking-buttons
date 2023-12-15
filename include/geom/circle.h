@@ -31,7 +31,7 @@ private:
 
 class CircumferenceIterator {
 public:
-  // Include the usual iterator tags for compatability with STL algorithms
+  // Include the usual iterator tags for compatibility with STL algorithms
   using iterator_category = std::forward_iterator_tag;
   using difference_type = int;
   using value_type = Point;

@@ -1,6 +1,9 @@
 // Styleguide: Google C++ Style Guidelines
 // https://google.github.io/styleguide/cppguide.html
 
+// Styleguide: Google C++ Style Guidelines
+// https://google.github.io/styleguide/cppguide.html
+
 #include <cstdlib>
 
 #include <alg/algorithms.h>

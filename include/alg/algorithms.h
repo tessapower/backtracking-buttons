@@ -40,7 +40,6 @@ auto is_part_of_button(img::Pixel const& pixel) noexcept -> bool;
 
 /**
  * Discovers the extent of points that are deemed connected to the given point.
- *
  * @param[in] point The point to start discovering from.
  * @param[in, out] discovered_extent A Rect which will be grown to fit all the
  * connected points as they are discovered.
