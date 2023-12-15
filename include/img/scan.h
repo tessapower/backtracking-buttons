@@ -9,7 +9,7 @@
 namespace img {
 class Scan {
 public:
-  explicit Scan(std::string const &input_filename) {
+  explicit Scan(std::string const& input_filename) {
     // Default values
     _screen_x = 0;
     _screen_y = 0;
@@ -18,14 +18,16 @@ public:
     load_ppm_file(input_filename);
   }
 
-  [[nodiscard]] auto get_pixel(geom::Point const &point) const
-      -> img::Pixel const &;
+  [[nodiscard]] auto get_pixel(geom::Point const& point) const
+      -> MaybeConstPixel;
+  [[nodiscard]] auto get_pixel(geom::Point const& point)
+      -> MaybePixel;
 
   /**
    * Saves the scan to a PPM file with the given filename.
    * @param output_filename
    */
-  auto save_ppm_file(std::string const &output_filename) const -> void;
+  auto save_ppm_file(std::string const& output_filename) const -> void;
 
   /**
    * @return The width of the image in pixels.
@@ -38,7 +40,7 @@ public:
   [[nodiscard]] auto screen_y() const -> int { return _screen_y; }
 
 private:
-  auto load_ppm_file(std::string const &input_filename) -> void;
+  auto load_ppm_file(std::string const& input_filename) -> void;
 
   std::vector<std::vector<img::Pixel>> _pixel_data;
   int _screen_x;

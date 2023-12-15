@@ -10,7 +10,7 @@ const std::string kInputFilename = PPM_FILES + std::string{"buttons.ppm"};
 const std::string kOutputFilename =
     PPM_FILES + std::string{"buttons_processed.ppm"};
 
-int main() {
+auto main() -> int {
   auto scan = img::Scan{kInputFilename};
   auto processed_scan = alg::process_scan(scan);
   processed_scan.save_ppm_file(kOutputFilename);

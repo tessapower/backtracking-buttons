@@ -12,7 +12,7 @@ auto geom::Rect::perimeter() const -> geom::PerimeterIterator {
   return PerimeterIterator{*this, Point{this->min_x, this->min_y}};
 }
 
-auto geom::Rect::expand_to_include(Point const &c) -> void {
+auto geom::Rect::expand_to_include(Point const& c) -> void {
   min_x = std::min(min_x, c.x());
   max_x = std::max(max_x, c.x());
   min_y = std::min(min_y, c.y());

@@ -44,7 +44,7 @@ public:
    * @param[in] c The circle to iterate over.
    * @param[in] dx The initial x offset from the origin.
    */
-  CircumferenceIterator(Circle const &c, int dx) noexcept
+  CircumferenceIterator(Circle const& c, int dx) noexcept
       : circle{c}, dx{dx}, radius{c.get_radius()},
         origin_x{c.get_origin().x()}, origin_y{c.get_origin().y()} {};
 
@@ -52,13 +52,13 @@ public:
   [[nodiscard]] auto operator*() const -> value_type;
   auto operator++() -> CircumferenceIterator;
 
-  friend auto operator==(CircumferenceIterator const &lhs,
-                         CircumferenceIterator const &rhs) -> bool {
+  friend auto operator==(CircumferenceIterator const& lhs,
+                         CircumferenceIterator const& rhs) -> bool {
     return lhs.dx == rhs.dx;
   }
 
-  friend auto operator!=(CircumferenceIterator const &lhs,
-                         CircumferenceIterator const &rhs) -> bool {
+  friend auto operator!=(CircumferenceIterator const& lhs,
+                         CircumferenceIterator const& rhs) -> bool {
     return !(lhs == rhs);
   }
 
@@ -66,7 +66,7 @@ public:
   [[nodiscard]] auto end() const -> CircumferenceIterator;
 
 private:
-  Circle const &circle;
+  Circle const& circle;
   int const origin_x;
   int const origin_y;
   int const radius;

@@ -12,10 +12,10 @@
 
 constexpr int kNumRequiredButtonHoles = 4;
 
-auto alg::process_scan(img::Scan const &scan) -> img::Scan {
+auto alg::process_scan(img::Scan const& scan) -> img::Scan {
   auto output_scan = scan;
 
-  for (auto const &bounds : alg::discover_all_button_bounds(output_scan)) {
+  for (auto const& bounds : alg::discover_all_button_bounds(output_scan)) {
     bool is_broken = false;
 
     // Draw two concentric circles and require that the pixelated edge of the
@@ -45,11 +45,11 @@ auto alg::process_scan(img::Scan const &scan) -> img::Scan {
                  kNumRequiredButtonHoles;
 
 #if DEBUG_VISUALIZATIONS
-    for (auto const &point : outer_circumference) {
+    for (auto const& point : outer_circumference) {
       img::draw_point(point, geom::Color::AzureBlue());
     }
 
-    for (auto const &point : inner_circumference) {
+    for (auto const& point : inner_circumference) {
       img::draw_point(point, geom::Color::AzureBlue());
     }
 #endif
@@ -65,7 +65,7 @@ auto alg::process_scan(img::Scan const &scan) -> img::Scan {
   return output_scan;
 }
 
-auto alg::discover_all_button_bounds(img::Scan &scan)
+auto alg::discover_all_button_bounds(img::Scan& scan)
     -> std::vector<geom::Rect> {
   std::vector<geom::Rect> bounds_of_buttons;
   const geom::Rect scan_rect =
@@ -81,8 +81,8 @@ auto alg::discover_all_button_bounds(img::Scan &scan)
       // Initialize our bounds to a 0-by-0 box which discover_bounds expands
       geom::Rect discovered_extent{point};
       alg::discover_extent_of_connected_points(
-          scan, point, discovered_extent, [&](img::Pixel const &px) {
-            return alg::is_part_of_button(px);
+          scan, point, discovered_extent, [&](img::Pixel const& p) {
+            return alg::is_part_of_button(p);
           });
 
       bounds_of_buttons.emplace_back(discovered_extent);
@@ -94,15 +94,15 @@ auto alg::discover_all_button_bounds(img::Scan &scan)
   return bounds_of_buttons;
 }
 
-auto alg::is_part_of_button(img::Pixel const &pixel) noexcept -> bool {
+auto alg::is_part_of_button(img::Pixel const& pixel) noexcept -> bool {
   return pixel.red() > 128;
 }
 
 // The discovered_points parameter is optional; if provided, it will be filled
 // with all points discovered while searching for the extent of connected points
 auto alg::discover_extent_of_connected_points(
-    const img::Scan &scan, geom::Point const &point,
-    geom::Rect &discovered_extent, PixelPredicate const &pred_fn,
+    img::Scan& scan, geom::Point const& point,
+    geom::Rect& discovered_extent, PixelPredicate const& pred_fn,
     OptionalPointVecRef discovered_points) -> void {
   auto pixel = scan.get_pixel(point);
   if (pixel.visited() || !pred_fn(pixel)) {
@@ -118,13 +118,13 @@ auto alg::discover_extent_of_connected_points(
 
   discovered_extent.expand_to_include(point);
 
-  for (auto const &p : point.neighbors()) {
+  for (auto const& p : point.neighbors()) {
     discover_extent_of_connected_points(scan, p, discovered_extent, pred_fn,
                                         discovered_points);
   }
 }
 
-auto alg::discover_num_button_holes(img::Scan &scan, geom::Rect const &bounds)
+auto alg::discover_num_button_holes(img::Scan& scan, geom::Rect const& bounds)
     -> int {
   int num_btn_holes = 0;
 
@@ -149,7 +149,7 @@ auto alg::discover_num_button_holes(img::Scan &scan, geom::Rect const &bounds)
 
       discover_extent_of_connected_points(
           scan, point, discovered_extent,
-          [&](img::Pixel const &p) {
+          [&](img::Pixel const& p) {
             return !alg::is_part_of_button(p);
           }
 #if DEBUG_VISUALIZATIONS
@@ -165,7 +165,7 @@ auto alg::discover_num_button_holes(img::Scan &scan, geom::Rect const &bounds)
         num_btn_holes++;
 
 #if DEBUG_VISUALIZATIONS
-        for (auto const &p : discovered_points) {
+        for (auto const& p : discovered_points) {
           img::draw_point(p, geom::Color::AzureBlue());
         }
 #endif

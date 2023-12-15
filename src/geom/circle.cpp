@@ -16,7 +16,7 @@ auto geom::CircumferenceIterator::end() const -> geom::CircumferenceIterator {
 }
 
 auto geom::CircumferenceIterator::operator*() const -> geom::Point {
-  const int dy = (int)sqrt(pow(radius, 2) - pow(dx, 2));
+  const int dy = static_cast<int>(sqrt(pow(radius, 2) - pow(dx, 2)));
 
   switch (octant) {
   case 0: return Point{origin_x + dx, origin_y + dy};

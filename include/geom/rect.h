@@ -39,14 +39,15 @@ public:
     return Point{(max_x + min_x) / 2, (max_y + min_y) / 2};
   }
 
-  [[nodiscard]] constexpr auto is_fully_enclosed_by(Rect const &other) const
+  [[nodiscard]] constexpr auto is_fully_enclosed_by(Rect const& other) const
       -> bool {
     return this->min_x > other.min_x &&
-           this->max_x<other.max_x &&this->min_y> other.min_y &&
+           this->max_x < other.max_x &&
+           this->min_y > other.min_y &&
            this->max_y < other.max_y;
   }
 
-  auto expand_to_include(Point const &c) -> void;
+  auto expand_to_include(Point const& c) -> void;
 
 private:
   int min_x;
@@ -61,14 +62,14 @@ private:
  */
 class RectIterator {
 public:
-  RectIterator(Rect const &rect, Point starting_point) noexcept
+  RectIterator(Rect const& rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  [[nodiscard]] auto operator*() const -> const Point & { return current; };
+  [[nodiscard]] auto operator*() const -> Point const& { return current; };
 
   auto operator++() -> RectIterator;
 
-  friend auto operator!=(RectIterator const &lhs, RectIterator const &rhs)
+  friend auto operator!=(RectIterator const& lhs, RectIterator const& rhs)
       -> bool {
     return lhs.current != rhs.current;
   }
@@ -82,15 +83,15 @@ private:
 
 class PerimeterIterator {
 public:
-  constexpr PerimeterIterator(Rect const &rect, Point starting_point) noexcept
+  constexpr PerimeterIterator(Rect const& rect, Point starting_point) noexcept
       : rect{rect}, current{starting_point} {};
 
-  [[nodiscard]] auto operator*() const -> const Point & { return current; };
+  [[nodiscard]] auto operator*() const -> Point const& { return current; };
 
   auto operator++() -> PerimeterIterator;
 
-  friend auto operator!=(PerimeterIterator const &lhs,
-                         PerimeterIterator const &rhs) -> bool {
+  friend auto operator!=(PerimeterIterator const& lhs,
+                         PerimeterIterator const& rhs) -> bool {
     return lhs.current != rhs.current;
   }
 
@@ -98,7 +99,7 @@ public:
   [[nodiscard]] auto end() const -> PerimeterIterator;
 
 private:
-  Rect const &rect;
+  Rect const& rect;
   Point current;
 };
 } // namespace geom

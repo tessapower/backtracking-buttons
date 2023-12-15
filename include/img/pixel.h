@@ -44,7 +44,7 @@ public:
   /**
    * @brief Changes the color of this pixel to the given color.
    */
-  auto change_color(const geom::Color &color) noexcept -> void {
+  auto change_color(geom::Color const& color) noexcept -> void {
     _red = color.R;
     _green = color.G;
     _blue = color.B;
@@ -60,7 +60,7 @@ public:
    */
   [[nodiscard]] auto visited() const noexcept -> bool { return _visited; }
 
-  friend auto operator<<(std::ostream& os, const Pixel & p) -> std::ostream & {
+  friend auto operator<<(std::ostream& os, Pixel const& p) -> std::ostream& {
     os << p._red << " " << p._green << " " << p._blue << " ";
 
     return os;

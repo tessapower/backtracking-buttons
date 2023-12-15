@@ -20,11 +20,11 @@ public:
    */
   [[nodiscard]] auto neighbors() const -> std::array<Point, 4>;
 
-  constexpr friend auto operator==(const Point &lhs, const Point &rhs) -> bool {
+  constexpr friend auto operator==(Point const& lhs, Point const& rhs) -> bool {
     return lhs._x == rhs._x && lhs._y == rhs._y;
   }
 
-  constexpr friend auto operator!=(const Point &lhs, const Point &rhs) -> bool {
+  constexpr friend auto operator!=(Point const& lhs, Point const& rhs) -> bool {
     return !(lhs == rhs);
   }
 

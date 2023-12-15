@@ -41,7 +41,7 @@ auto img::Scan::load_ppm_file(const std::string &input_filename) -> void {
   input_file.close();
 }
 
-auto img::Scan::save_ppm_file(const std::string &output_filename) const
+auto img::Scan::save_ppm_file(std::string const& output_filename) const
     -> void {
   std::fstream output_file;
 
